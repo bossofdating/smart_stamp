@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/cont_name_textview"
@@ -32,6 +32,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cont_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textSize="15dp"
+            android:textColor="@color/commonTextMiddle"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:gravity="center_vertical">
 
@@ -39,11 +56,16 @@
             android:id="@+id/cont_detail_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="5"
+            android:maxLines="10"
             android:ellipsize="end"
             android:layout_marginLeft="10dp"
             android:textSize="14dp"
             android:textColor="@color/commonTextMiddle"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/commonTextGray"/>
 
 </LinearLayout>

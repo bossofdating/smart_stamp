@@ -8,13 +8,14 @@
     android:visibility="gone">
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingRight="15dp"
-        android:paddingLeft="15dp"
-        android:id="@+id/swipe_layout">
+        android:paddingLeft="15dp">
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/dashboard_nestedscrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
@@ -171,7 +172,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp">
 
@@ -194,25 +195,21 @@
                         android:textColor="@color/commonTextGrayDeep"/>
                 </LinearLayout>
 
-                <android.support.v7.widget.CardView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="10dp"
-                    app:cardBackgroundColor="@color/commonTextWhite"
-                    app:cardElevation="2dp"
-                    app:cardCornerRadius="5dp"
-                    app:cardUseCompatPadding="true">
+                    android:descendantFocusability="blocksDescendants">
 
-                    <ListView
-                        android:id="@+id/contract_list_listview"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/contract_list_recyclerview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:footerDividersEnabled="true"
-                        android:padding="15dp">
-                    </ListView>
-                </android.support.v7.widget.CardView>
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/card_rounded_primary"
+                        android:padding="15dp"/>
+                </RelativeLayout>
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

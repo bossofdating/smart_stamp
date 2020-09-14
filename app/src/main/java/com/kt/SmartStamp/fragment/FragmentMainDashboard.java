@@ -7,44 +7,46 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
-import com.kt.SmartStamp.adapter.ListViewAdapterMainDashboard;
+import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainDashboard;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
 import com.kt.SmartStamp.listener.HTTP_RESULT_LISTENER;
+import com.kt.SmartStamp.listener.LIST_ITEM_LISTENER;
 import com.kt.SmartStamp.service.SessionManager;
 import com.kt.SmartStamp.utility.HTTP_ASYNC_REQUEST;
 import com.kt.SmartStamp.utility.JSONService;
 
 import java.util.ArrayList;
 
-public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LISTENER, AdapterView.OnItemClickListener {
+public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
 	public static HTTP_ASYNC_REQUEST httpAsyncRequest;
 	public static SessionManager sessionManager;
 	private JSONService jsonService;
 	private ArrayList<ServerDataContract> contractArrayList;
-	public static ListViewAdapterMainDashboard listViewAdapterMainDashboard;
+	public static RecyclerViewAdapterMainDashboard recyclerViewAdapterMainDashboard;
 
 	public static final int ANIMATION_DELAY_TIME = 100;
 	private static final long MIN_CLICK_INTERVAL = 500;
 	private long mLastClickTime;
+	private int offset = 0;
 
+	private NestedScrollView dashboardNestedscrollview;
+	private RecyclerView recyclerViewMainDashboard;
 	private LinearLayout dashboardLinearLayout;
 	private TextView utnameTextView;
 	private TextView nameTextView;
@@ -52,7 +54,6 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 	private TextView contNCntTextView;
 	private TextView contRCntTextView;
 	private TextView contYCntTextView;
-	private ListView contractListListView;
 
 	@Override
 	public void onAttach(Context context) {
@@ -76,12 +77,15 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 		swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
+				offset = 0;
 				contractArrayList = new ArrayList<>();
 				requestHttpDataContCnt();
 				swipeRefreshLayout.setRefreshing(false);
 			}
 		});
 
+		dashboardNestedscrollview = FragmentView.findViewById(R.id.dashboard_nestedscrollview);
+		recyclerViewMainDashboard = FragmentView.findViewById(R.id.contract_list_recyclerview);
 		dashboardLinearLayout = FragmentView.findViewById(R.id.dashboard_linearlayout);
 		utnameTextView = FragmentView.findViewById(R.id.utname_textview);
 		nameTextView = FragmentView.findViewById(R.id.name_textview);
@@ -89,9 +93,16 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 		contNCntTextView = FragmentView.findViewById(R.id.cont_n_cnt_textview);
 		contRCntTextView = FragmentView.findViewById(R.id.cont_r_cnt_textview);
 		contYCntTextView = FragmentView.findViewById(R.id.cont_y_cnt_textview);
-		contractListListView = FragmentView.findViewById(R.id.contract_list_listview);
 
-		contractListListView.setOnItemClickListener(this);
+		dashboardNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+			@Override
+			public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+				if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+					offset++;
+					requestHttpDataContCnt();
+				}
+			}
+		});
 
 		requestHttpDataContCnt();
 
@@ -115,10 +126,32 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) { super.onConfigurationChanged(newConfig); }
 
+	/********************************** 리스트 아이템 이벤트 핸들러 **********************************/
+	@Override
+	public void onItemClick(Object CallerObject, int clickType, int position) {
+		// 중복 클릭인 경우
+		long currentClickTime= SystemClock.uptimeMillis();
+		long elapsedTime=currentClickTime-mLastClickTime;
+		if(elapsedTime<=MIN_CLICK_INTERVAL){
+			return;
+		}
+		mLastClickTime=currentClickTime;
+
+		switch(clickType) {
+			case COMMON_DEFINE.LIST_ITEM_CLICK_TYPE_NORMAL :
+				break;
+			case COMMON_DEFINE.LIST_ITEM_CLICK_TYPE_DELETE :
+				break;
+		}
+	}
+
+	@Override
+	public void onReachedLastItem(Object callerObject) {}
+
 	/************************************ 액티비티 실행 결과 수신 *************************************/
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch( requestCode ) { }
+		switch(requestCode) { }
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 
@@ -130,31 +163,15 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 		dashboardLinearLayout.setVisibility(View.VISIBLE);
 	}
 
-	/************************************* ListView 이벤트 핸들러 *************************************/
-	@Override
-	public void onItemClick(AdapterView<?> Parent, View view, final int Position, long id) {
-		// 중복 클릭인 경우
-		long currentClickTime= SystemClock.uptimeMillis();
-		long elapsedTime=currentClickTime-mLastClickTime;
-		if(elapsedTime<=MIN_CLICK_INTERVAL){
-			return;
-		}
-		mLastClickTime=currentClickTime;
-		new Handler().postDelayed(new Runnable() {
-			public void run() {
-			}
-		}, ANIMATION_DELAY_TIME < 0 ? 0 : ANIMATION_DELAY_TIME);
-	}
-
 	/************************************* HTTP  데이터요청 ******************************************/
 	// 계약 상태별 카운트 - 1
 	public static void requestHttpDataContCnt() {
 		httpAsyncRequest.RequestHttpGetData(String.format(HTTP_DEFINE.HTTP_URL_CONT_CNT, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 1);
 	}
 	// 등록 대기 문서 리스트 - 2
-	public static void requestHttpDataContNList(String offset) {
+	public static void requestHttpDataContNList(int offset) {
 		httpAsyncRequest.AddHeaderData("type", "n");
-		httpAsyncRequest.AddHeaderData("offset", offset);
+		httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
 		httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_CONT_LIST, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 2);
 	}
 
@@ -183,7 +200,7 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 			contYCntTextView.setText(contYCcnt + "건");
 		}
 
-		requestHttpDataContNList("0");
+		requestHttpDataContNList(offset);
 	}
 	// 등록 대기 문서 리스트 - 2
 	private void parseJsonContNList(String jsonData) {
@@ -195,40 +212,16 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 				contractArrayList.add(serverDataContract);
 			}
 
-			listViewAdapterMainDashboard = new ListViewAdapterMainDashboard(getActivity(), contractArrayList);
-			contractListListView.setAdapter(listViewAdapterMainDashboard);
-			listViewAdapterMainDashboard.notifyDataSetChanged();
-			setListViewHeightBasedOnChildren(contractListListView);
+			recyclerViewAdapterMainDashboard = new RecyclerViewAdapterMainDashboard(getActivity(), contractArrayList, this);
+			recyclerViewAdapterMainDashboard.notifyDataSetChanged();
+			recyclerViewMainDashboard.setLayoutManager(new LinearLayoutManager(getActivity()));
+			recyclerViewMainDashboard.setAdapter(recyclerViewAdapterMainDashboard);
+		} else {
+			offset--;
 		}
 
 		// 기본 레이아웃 출력
 		displayLayoutDefault();
-	}
-
-	/**************************************** 리스트 높이 동적 변경 *******************************************/
-	public void setListViewHeightBasedOnChildren(ListView listView) {
-		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) {
-			return;
-		}
-
-		int totalHeight = 0;
-		int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-
-		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height = 0;
-		listView.setLayoutParams(params);
-		listView.requestLayout();
-
-		for (int i = 0; i < listAdapter.getCount(); i++) {
-			View listItem = listAdapter.getView(i, null, listView);
-			listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-			totalHeight += listItem.getMeasuredHeight();
-		}
-
-		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1)) + 150;
-		listView.setLayoutParams(params);
-		listView.requestLayout();
 	}
 
 	/*************************************** 다이얼로그 출력 ******************************************/

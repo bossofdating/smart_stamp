@@ -53,16 +53,18 @@ public class ListViewAdapterMainDashboard extends BaseAdapter {
 		// 레이아웃 연결
 		TextView contNameTextView = view.findViewById(R.id.cont_name_textview);
 		TextView contStateTextView = view.findViewById(R.id.cont_state_textview);
+		TextView contDateTextview = view.findViewById(R.id.cont_date_textview);
 		TextView contDetailTextView = view.findViewById(R.id.cont_detail_textview);
 
 		// 레이아웃 출력
 		ServerDataContract serverDataContract = contractArrayList.get(position);
 		contNameTextView.setText(serverDataContract.cont_name);
+		contDateTextview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
 		contDetailTextView.setText(serverDataContract.cont_detail);
 
-		int doc_before_cnt = Integer.parseInt(serverDataContract.doc_before_cnt);
-		if (doc_before_cnt > 0) {
-			contStateTextView.setText("등록중 (" + serverDataContract.doc_before_cnt + ")");
+		int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
+		if (doc_after_cnt > 0) {
+			contStateTextView.setText("등록중 (" + serverDataContract.doc_after_cnt + ")");
 			contStateTextView.setTextColor(context.getResources().getColor(R.color.colorAccent));
 		} else contStateTextView.setText("등록 대기");
 
