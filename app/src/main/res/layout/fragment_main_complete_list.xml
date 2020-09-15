@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/list_linearlayout"
+    android:id="@+id/complete_list_linearlayout"
     android:visibility="gone">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -14,7 +14,7 @@
         android:paddingLeft="15dp">
 
         <android.support.v4.widget.NestedScrollView
-            android:id="@+id/list_nestedscrollview"
+            android:id="@+id/complete_list_nestedscrollview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
@@ -42,7 +42,7 @@
                         android:textSize="15dp"
                         android:textColor="@color/commonTextDefault"
                         android:textStyle="bold"
-                        android:text="날인 대기 문서"/>
+                        android:text="날인 완료 문서"/>
 
                     <TextView
                         android:id="@+id/cont_cnt_textview"
@@ -65,15 +65,14 @@
                     android:background="@drawable/card_rounded_primary"
                     android:gravity="center_horizontal"
                     android:textColor="@color/colorAccent"
-                    android:text="날인 대기 문서가 없습니다."
+                    android:text="등록 대기 문서가 없습니다."
                     android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/contract_list_relativelayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:descendantFocusability="blocksDescendants"
-                    android:visibility="gone">
+                    android:descendantFocusability="blocksDescendants">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/contract_list_recyclerview"

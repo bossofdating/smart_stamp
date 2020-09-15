@@ -195,7 +195,22 @@
                         android:textColor="@color/commonTextGrayDeep"/>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/nodata_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:paddingTop="100dp"
+                    android:paddingBottom="100dp"
+                    android:background="@drawable/card_rounded_primary"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/colorAccent"
+                    android:text="등록 대기 문서가 없습니다."
+                    android:visibility="gone"/>
+
                 <RelativeLayout
+                    android:id="@+id/contract_list_relativelayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:descendantFocusability="blocksDescendants">

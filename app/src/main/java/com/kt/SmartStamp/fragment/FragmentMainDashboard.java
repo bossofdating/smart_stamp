@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ import com.kt.SmartStamp.utility.JSONService;
 
 import java.util.ArrayList;
 
-public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
+public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
 	public static HTTP_ASYNC_REQUEST httpAsyncRequest;
 	public static SessionManager sessionManager;
 	private JSONService jsonService;
@@ -54,6 +55,8 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 	private TextView contNCntTextView;
 	private TextView contRCntTextView;
 	private TextView contYCntTextView;
+	private TextView nodataTextview;
+	private RelativeLayout contractListRelativelayout;
 
 	@Override
 	public void onAttach(Context context) {
@@ -93,6 +96,8 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 		contNCntTextView = FragmentView.findViewById(R.id.cont_n_cnt_textview);
 		contRCntTextView = FragmentView.findViewById(R.id.cont_r_cnt_textview);
 		contYCntTextView = FragmentView.findViewById(R.id.cont_y_cnt_textview);
+		nodataTextview = FragmentView.findViewById(R.id.nodata_textview);
+		contractListRelativelayout = FragmentView.findViewById(R.id.contract_list_relativelayout);
 
 		dashboardNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
@@ -192,12 +197,21 @@ public class FragmentMainDashboard extends Fragment implements  HTTP_RESULT_LIST
 		if(jsonService != null) {
 			String contNCnt = jsonService.GetString( "cont_n_cnt", null );
 			String contRCnt = jsonService.GetString( "cont_r_cnt", null );
-			String contYCcnt = jsonService.GetString( "cont_y_cnt", null );
+			String contYCnt = jsonService.GetString( "cont_y_cnt", null );
+
+			if (Integer.parseInt(contNCnt) > 0) {
+				nodataTextview.setVisibility(View.GONE);
+				contractListRelativelayout.setVisibility(View.VISIBLE);
+			}
+			else {
+				contractListRelativelayout.setVisibility(View.GONE);
+				nodataTextview.setVisibility(View.VISIBLE);
+			}
 
 			contCntTextView.setText(contNCnt + "건");
 			contNCntTextView.setText(contNCnt + "건");
 			contRCntTextView.setText(contRCnt + "건");
-			contYCntTextView.setText(contYCcnt + "건");
+			contYCntTextView.setText(contYCnt + "건");
 		}
 
 		requestHttpDataContNList(offset);

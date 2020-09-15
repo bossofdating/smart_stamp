@@ -22,7 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
-import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainList;
+import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainCompleteList;
+import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainDashboard;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
@@ -34,21 +35,21 @@ import com.kt.SmartStamp.utility.JSONService;
 
 import java.util.ArrayList;
 
-public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
+public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
 	public static HTTP_ASYNC_REQUEST httpAsyncRequest;
 	public static SessionManager sessionManager;
 	private JSONService jsonService;
 	private ArrayList<ServerDataContract> contractArrayList;
-	public static RecyclerViewAdapterMainList recyclerViewAdapterMainList;
+	public static RecyclerViewAdapterMainCompleteList recyclerViewAdapterMainCompleteList;
 
 	public static final int ANIMATION_DELAY_TIME = 100;
 	private static final long MIN_CLICK_INTERVAL = 500;
 	private long mLastClickTime;
 	private int offset = 0;
 
-	private NestedScrollView listNestedscrollview;
-	private RecyclerView recyclerViewMainList;
-	private LinearLayout listLinearLayout;
+	private NestedScrollView completeListNestedscrollview;
+	private RecyclerView recyclerViewMainCompleteList;
+	private LinearLayout completeListLinearLayout;
 	private TextView contCntTextView;
 	private TextView nodataTextview;
 	private RelativeLayout contractListRelativelayout;
@@ -65,7 +66,7 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View FragmentView = inflater.inflate(R.layout.fragment_main_list, container, false);
+		View FragmentView = inflater.inflate(R.layout.fragment_main_complete_list, container, false);
 		httpAsyncRequest = new HTTP_ASYNC_REQUEST(getActivity(), COMMON_DEFINE.REST_API_AUTHORIZE_KEY_NAME, this);
 		sessionManager = new SessionManager(getActivity());
 		jsonService = new JSONService();
@@ -82,14 +83,14 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 			}
 		});
 
-		listNestedscrollview = FragmentView.findViewById(R.id.list_nestedscrollview);
-		recyclerViewMainList = FragmentView.findViewById(R.id.contract_list_recyclerview);
-		listLinearLayout = FragmentView.findViewById(R.id.list_linearlayout);
+		completeListNestedscrollview = FragmentView.findViewById(R.id.complete_list_nestedscrollview);
+		recyclerViewMainCompleteList = FragmentView.findViewById(R.id.contract_list_recyclerview);
+		completeListLinearLayout = FragmentView.findViewById(R.id.complete_list_linearlayout);
 		contCntTextView = FragmentView.findViewById(R.id.cont_cnt_textview);
 		nodataTextview = FragmentView.findViewById(R.id.nodata_textview);
 		contractListRelativelayout = FragmentView.findViewById(R.id.contract_list_relativelayout);
 
-		listNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+		completeListNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
 			public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
 				if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
@@ -152,7 +153,7 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 
 	/**************************************** 레이아웃 출력 *******************************************/
 	private void displayLayoutDefault() {
-		listLinearLayout.setVisibility(View.VISIBLE);
+		completeListLinearLayout.setVisibility(View.VISIBLE);
 	}
 
 	/************************************* HTTP  데이터요청 ******************************************/
@@ -160,9 +161,9 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 	public static void requestHttpDataContCnt() {
 		httpAsyncRequest.RequestHttpGetData(String.format(HTTP_DEFINE.HTTP_URL_CONT_CNT, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 1);
 	}
-	// 날인 대기 문서 리스트 - 2
+	// 날인 완료 문서 리스트 - 2
 	public static void requestHttpDataContNList(int offset) {
-		httpAsyncRequest.AddHeaderData("type", "r");
+		httpAsyncRequest.AddHeaderData("type", "y");
 		httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
 		httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_CONT_LIST, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 2);
 	}
@@ -172,7 +173,7 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 	public void onReceiveHttpResult(boolean Success, String ResultData, Bitmap ResultBitmap, int RequestCode, int HttpResponseCode, Object PassThroughData) {
 		if(Success) {
 			if(RequestCode == 1) parseJsonContCnt(ResultData);		// 계약 상태별 카운트 - 1
-			if(RequestCode == 2) parseJsonContNList(ResultData);	// 날인 대기 문서 리스트 - 2
+			if(RequestCode == 2) parseJsonContNList(ResultData);	// 날인 완료 문서 리스트 - 2
 		} else Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 	}
 	// 계약 상태별 카운트 - 1
@@ -180,9 +181,9 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 		jsonService.CreateJSONObject(jsonData);
 
 		if(jsonService != null) {
-			String contRCnt = jsonService.GetString( "cont_r_cnt", null );
+			String contYCnt = jsonService.GetString( "cont_y_cnt", null );
 
-			if (Integer.parseInt(contRCnt) > 0) {
+			if (Integer.parseInt(contYCnt) > 0) {
 				nodataTextview.setVisibility(View.GONE);
 				contractListRelativelayout.setVisibility(View.VISIBLE);
 			}
@@ -191,12 +192,12 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 				nodataTextview.setVisibility(View.VISIBLE);
 			}
 
-			contCntTextView.setText(contRCnt + "건");
+			contCntTextView.setText(contYCnt + "건");
 		}
 
 		requestHttpDataContNList(offset);
 	}
-	// 날인 대기 문서 리스트 - 2
+	// 날인 완료 문서 리스트 - 2
 	private void parseJsonContNList(String jsonData) {
 		jsonService.CreateJSONArray(jsonData);
 
@@ -206,10 +207,10 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 				contractArrayList.add(serverDataContract);
 			}
 
-			recyclerViewAdapterMainList = new RecyclerViewAdapterMainList(getActivity(), contractArrayList, this);
-			recyclerViewAdapterMainList.notifyDataSetChanged();
-			recyclerViewMainList.setLayoutManager(new LinearLayoutManager(getActivity()));
-			recyclerViewMainList.setAdapter(recyclerViewAdapterMainList);
+			recyclerViewAdapterMainCompleteList = new RecyclerViewAdapterMainCompleteList(getActivity(), contractArrayList, this);
+			recyclerViewAdapterMainCompleteList.notifyDataSetChanged();
+			recyclerViewMainCompleteList.setLayoutManager(new LinearLayoutManager(getActivity()));
+			recyclerViewMainCompleteList.setAdapter(recyclerViewAdapterMainCompleteList);
 		} else {
 			offset--;
 		}

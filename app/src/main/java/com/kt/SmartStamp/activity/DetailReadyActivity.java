@@ -1,22 +1,21 @@
 package com.kt.SmartStamp.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.annotation.NonNull;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.fragment.FragmentMainCompleteList;
 import com.kt.SmartStamp.fragment.FragmentMainDashboard;
 import com.kt.SmartStamp.fragment.FragmentMainList;
 
-public class MainActivity extends AppCompatActivity {
+public class DetailReadyActivity extends AppCompatActivity {
     public static final int FRAGMENT_DASHBOARD = 0;
     public static final int FRAGMENT_LIST = 1;
     public static final int FRAGMENT_COMPLETE_LIST = 2;
