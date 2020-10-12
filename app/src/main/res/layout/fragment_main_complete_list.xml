@@ -42,7 +42,7 @@
                         android:textSize="15dp"
                         android:textColor="@color/commonTextDefault"
                         android:textStyle="bold"
-                        android:text="날인 완료 문서"/>
+                        android:text="날인 완료 계약"/>
 
                     <TextView
                         android:id="@+id/cont_cnt_textview"
@@ -65,7 +65,7 @@
                     android:background="@drawable/card_rounded_primary"
                     android:gravity="center_horizontal"
                     android:textColor="@color/colorAccent"
-                    android:text="등록 대기 문서가 없습니다."
+                    android:text="등록 대기 계약이 없습니다."
                     android:visibility="gone"/>
 
                 <RelativeLayout

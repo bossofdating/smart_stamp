@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_complete_list_black_24dp"
         android:title="" />
 
-    <item
+    <!--<item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings_black_24dp"
-        android:title="" />
+        android:title="" />-->
 
 </menu>

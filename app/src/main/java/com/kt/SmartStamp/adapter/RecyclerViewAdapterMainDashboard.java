@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kt.SmartStamp.R;
-import com.kt.SmartStamp.activity.TermsActivity;
+import com.kt.SmartStamp.activity.DetailReadyActivity;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.listener.LIST_ITEM_LISTENER;
 
@@ -85,11 +85,11 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
 		Holder.cont_detail_textview.setText(serverDataContract.cont_detail);
 
-		int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
+		/*int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
 		if (doc_after_cnt > 0) {
 			Holder.cont_state_textview.setText("등록중 (" + serverDataContract.doc_after_cnt + ")");
 			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorAccent));
-		} else Holder.cont_state_textview.setText("등록 대기");
+		} else Holder.cont_state_textview.setText("등록 대기");*/
 	}
 	/**************************************** OnViewRecycled ****************************************/
 	@Override
@@ -107,7 +107,7 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 	public void onClick(View view) {
 		int position = (int)view.getTag();
 
-		Intent IntentInstance = new Intent(context, TermsActivity.class );
+		Intent IntentInstance = new Intent(context, DetailReadyActivity.class );
 		IntentInstance.putExtra("cont_idx", contractArrayList.get(position).cont_idx);
 		context.startActivity( IntentInstance );
 	}

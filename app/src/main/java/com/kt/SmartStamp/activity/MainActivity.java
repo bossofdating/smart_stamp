@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_complete_list:
                     displayFragment(FRAGMENT_COMPLETE_LIST);
                     return true;
-                case R.id.navigation_settings:
+                /*case R.id.navigation_settings:
                     displayFragment(FRAGMENT_SETTING);
-                    return true;
+                    return true;*/
             }
             return false;
         }

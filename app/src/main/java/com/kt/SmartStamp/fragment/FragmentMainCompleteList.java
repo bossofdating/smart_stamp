@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainCompleteList;
-import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainDashboard;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
@@ -161,7 +160,7 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 	public static void requestHttpDataContCnt() {
 		httpAsyncRequest.RequestHttpGetData(String.format(HTTP_DEFINE.HTTP_URL_CONT_CNT, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 1);
 	}
-	// 날인 완료 문서 리스트 - 2
+	// 날인 완료 계약 리스트 - 2
 	public static void requestHttpDataContNList(int offset) {
 		httpAsyncRequest.AddHeaderData("type", "y");
 		httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
@@ -173,7 +172,7 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 	public void onReceiveHttpResult(boolean Success, String ResultData, Bitmap ResultBitmap, int RequestCode, int HttpResponseCode, Object PassThroughData) {
 		if(Success) {
 			if(RequestCode == 1) parseJsonContCnt(ResultData);		// 계약 상태별 카운트 - 1
-			if(RequestCode == 2) parseJsonContNList(ResultData);	// 날인 완료 문서 리스트 - 2
+			if(RequestCode == 2) parseJsonContNList(ResultData);	// 날인 완료 계약 리스트 - 2
 		} else Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 	}
 	// 계약 상태별 카운트 - 1
@@ -197,7 +196,7 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 
 		requestHttpDataContNList(offset);
 	}
-	// 날인 완료 문서 리스트 - 2
+	// 날인 완료 계약 리스트 - 2
 	private void parseJsonContNList(String jsonData) {
 		jsonService.CreateJSONArray(jsonData);
 

@@ -162,9 +162,6 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 
 	/**************************************** 레이아웃 출력 *******************************************/
 	private void displayLayoutDefault() {
-		utnameTextView.setText(sessionManager.getUtName());
-		nameTextView.setText(sessionManager.getMemName());
-
 		dashboardLinearLayout.setVisibility(View.VISIBLE);
 	}
 
@@ -173,7 +170,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	public static void requestHttpDataContCnt() {
 		httpAsyncRequest.RequestHttpGetData(String.format(HTTP_DEFINE.HTTP_URL_CONT_CNT, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 1);
 	}
-	// 등록 대기 문서 리스트 - 2
+	// 등록 대기 계약 리스트 - 2
 	public static void requestHttpDataContNList(int offset) {
 		httpAsyncRequest.AddHeaderData("type", "n");
 		httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
@@ -185,7 +182,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	public void onReceiveHttpResult(boolean Success, String ResultData, Bitmap ResultBitmap, int RequestCode, int HttpResponseCode, Object PassThroughData) {
 		if(Success) {
 			if(RequestCode == 1) parseJsonContCnt(ResultData);		// 계약 상태별 카운트 - 1
-			if(RequestCode == 2) parseJsonContNList(ResultData);	// 등록 대기 문서 리스트 - 2
+			if(RequestCode == 2) parseJsonContNList(ResultData);	// 등록 대기 계약 리스트 - 2
 		} else Toast.makeText(getActivity(), getString(R.string.network_error), Toast.LENGTH_SHORT).show();
 	}
 
@@ -195,9 +192,9 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 		jsonService.CreateJSONObject(jsonData);
 
 		if(jsonService != null) {
-			String contNCnt = jsonService.GetString( "cont_n_cnt", null );
-			String contRCnt = jsonService.GetString( "cont_r_cnt", null );
-			String contYCnt = jsonService.GetString( "cont_y_cnt", null );
+			String contNCnt = jsonService.GetString("cont_n_cnt", null);
+			String contRCnt = jsonService.GetString("cont_r_cnt", null);
+			String contYCnt = jsonService.GetString("cont_y_cnt", null);
 
 			if (Integer.parseInt(contNCnt) > 0) {
 				nodataTextview.setVisibility(View.GONE);
@@ -216,7 +213,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 
 		requestHttpDataContNList(offset);
 	}
-	// 등록 대기 문서 리스트 - 2
+	// 등록 대기 계약 리스트 - 2
 	private void parseJsonContNList(String jsonData) {
 		jsonService.CreateJSONArray(jsonData);
 
@@ -226,7 +223,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 				contractArrayList.add(serverDataContract);
 			}
 
-			recyclerViewAdapterMainDashboard = new RecyclerViewAdapterMainDashboard(getActivity(), contractArrayList, this);
+			recyclerViewAdapterMainDashboard = new RecyclerViewAdapterMainDashboard(getContext(), contractArrayList, this);
 			recyclerViewAdapterMainDashboard.notifyDataSetChanged();
 			recyclerViewMainDashboard.setLayoutManager(new LinearLayoutManager(getActivity()));
 			recyclerViewMainDashboard.setAdapter(recyclerViewAdapterMainDashboard);

@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kt.SmartStamp.BuildConfig;
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try {
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            if( BuildConfig.DEBUG ) e.printStackTrace();
         }
 
         idEditText = findViewById(R.id.id_edittext);
