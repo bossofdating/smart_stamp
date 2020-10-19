@@ -14,4 +14,9 @@
     <dimen name="spacing_xlarge">35dp</dimen>
     <dimen name="spacing_xmlarge">40dp</dimen>
     <dimen name="spacing_xxlarge">50dp</dimen>
+    <dimen name="Dialog_Button_Height">55dp</dimen>
+
+    <dimen name="Dialog_ContentLayer_Height">48dp</dimen>
+    <dimen name="Common_Content_InnerPadding">16dp</dimen>
+    <dimen name="Common_TextSize_Item">14dp</dimen>
 </resources>

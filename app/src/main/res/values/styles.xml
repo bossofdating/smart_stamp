@@ -10,6 +10,16 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.Sub" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/Common_StatusBar_Gray</item>
+    </style>
+
+    <style name="AppTheme.TitleBar" parent="AppTheme">
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
     <style name="CustomTransparentProgressDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

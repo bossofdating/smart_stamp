@@ -1,0 +1,13 @@
+<resources>
+
+    <string-array name="photo_flag">
+        <item>수정</item>
+        <item>삭제</item>
+    </string-array>
+
+    <string-array name="photo_select">
+        <item>앨범</item>
+        <item>카메라</item>
+    </string-array>
+
+</resources>

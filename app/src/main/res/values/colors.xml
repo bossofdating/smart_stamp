@@ -15,6 +15,16 @@
     <color name="commonTextGrayDeep">#B3B3B3</color>
     <color name="commonTextGray">#D8D8D8</color>
 
+    <color name="Common_StatusBar_Gray">#999999</color>
+    <color name="Common_Dialog_EvenLayer">#fafafa</color>
+    <color name="Common_Background_White">#ffffff</color>
+    <color name="Common_ClickItem_Effect">#1A000000</color>
+    <color name="Common_Text_Middle">#6A696A</color>
+    <color name="Common_Text_Gray_Deep">#B3B3B3</color>
+    <color name="Common_Text_Primary">#ef404d</color>
+    <color name="Common_Divider_Gray">#eeeeee</color>
+    <color name="Common_Text_Black_Light">#4A4A4A</color>
+
     <color name="overlay_light_80">#FEFEFE</color>
     <color name="grey_3">#f7f7f7</color>
     <color name="grey_5">#f2f2f2</color>

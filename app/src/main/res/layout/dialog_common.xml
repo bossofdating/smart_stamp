@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="30dp"
+    android:layout_marginEnd="30dp"
+    android:background="@color/Common_Background_White"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/RelativeLayout_TitleLayer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingStart="@dimen/Common_Content_InnerPadding"
+            android:paddingEnd="@dimen/Common_Content_InnerPadding"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TextView_Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textSize="18dp"
+                android:textColor="@color/colorPrimary"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/TextView_Description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textSize="16dp"
+                android:textColor="@color/Common_Text_Gray_Deep"
+                android:visibility="gone"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/Common_Divider_Gray"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1000"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/ListView_DialogItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/Common_Background_White">
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_ButtonLayer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/Dialog_Button_Height"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:background="@color/Common_Background_White">
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/Button_Negative"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:textColor="@color/Common_Text_Gray_Deep"
+                android:background="@color/Common_Background_White"
+                android:visibility="gone"/>
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/Button_Positive"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:textSize="16dp"
+                android:textColor="@color/colorAccent"
+                android:background="@color/Common_Background_White"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

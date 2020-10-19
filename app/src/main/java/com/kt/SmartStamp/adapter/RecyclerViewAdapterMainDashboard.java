@@ -85,11 +85,11 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
 		Holder.cont_detail_textview.setText(serverDataContract.cont_detail);
 
-		/*int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
-		if (doc_after_cnt > 0) {
-			Holder.cont_state_textview.setText("등록중 (" + serverDataContract.doc_after_cnt + ")");
+		int doc_before_cnt = Integer.parseInt(serverDataContract.doc_before_cnt);
+		if (doc_before_cnt > 0) {
+			Holder.cont_state_textview.setText("등록중 (" + serverDataContract.doc_before_cnt + ")");
 			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorAccent));
-		} else Holder.cont_state_textview.setText("등록 대기");*/
+		} else Holder.cont_state_textview.setText("등록 대기");
 	}
 	/**************************************** OnViewRecycled ****************************************/
 	@Override

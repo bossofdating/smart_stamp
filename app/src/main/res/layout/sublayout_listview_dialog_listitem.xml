@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/Dialog_ContentLayer_Height"
+    android:paddingStart="@dimen/Common_Content_InnerPadding"
+    android:paddingEnd="@dimen/Common_Content_InnerPadding"
+    android:foreground="@drawable/ripple_common_click_border">
+
+    <ImageView
+        android:id="@+id/ImageView_ItemSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/selector_dialog_common_selected"/>
+
+    <TextView
+        android:id="@+id/TextView_ItemText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/Common_TextSize_Item"
+        android:textColor="@color/Common_Text_Middle"/>
+
+</RelativeLayout>

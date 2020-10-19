@@ -90,8 +90,8 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 		dashboardNestedscrollview = FragmentView.findViewById(R.id.dashboard_nestedscrollview);
 		recyclerViewMainDashboard = FragmentView.findViewById(R.id.contract_list_recyclerview);
 		dashboardLinearLayout = FragmentView.findViewById(R.id.dashboard_linearlayout);
-		utnameTextView = FragmentView.findViewById(R.id.utname_textview);
-		nameTextView = FragmentView.findViewById(R.id.name_textview);
+		/*utnameTextView = FragmentView.findViewById(R.id.utname_textview);
+		nameTextView = FragmentView.findViewById(R.id.name_textview);*/
 		contCntTextView = FragmentView.findViewById(R.id.cont_cnt_textview);
 		contNCntTextView = FragmentView.findViewById(R.id.cont_n_cnt_textview);
 		contRCntTextView = FragmentView.findViewById(R.id.cont_r_cnt_textview);

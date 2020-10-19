@@ -55,6 +55,79 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CommonUtil {
+	public static String GetFileExtension( @NonNull String FileName ) {
+		int StringIndex = FileName.lastIndexOf( '.' );
+		if( StringIndex == -1 ) return "";
+		else return FileName.subSequence( StringIndex, FileName.length() ).toString();
+	}
+
+	public static Bitmap GetResizedBitmap( String BitmapFilePath, int ResizedWidth, int ResizedHeight ) {
+		Bitmap ScalingBitmap;
+		Bitmap ResizeImage = null;
+		BitmapFactory.Options BitmapInfo = new BitmapFactory.Options();
+		BitmapFactory.Options BitmapOptions  = new BitmapFactory.Options();
+
+		try {
+			BitmapInfo.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile( BitmapFilePath, BitmapInfo );
+			if( ResizedWidth == 0 && ResizedHeight == 0 ) return null;
+			if( ResizedWidth == 0 ) BitmapOptions.outWidth = (int) (BitmapInfo.outWidth * ((float) ResizedHeight / BitmapInfo.outHeight));
+			else BitmapOptions.outWidth = ResizedWidth;
+			if( ResizedHeight == 0 ) BitmapOptions.outHeight = (int) (BitmapInfo.outHeight * ((float) ResizedWidth / BitmapInfo.outWidth));
+			else BitmapOptions.outHeight = ResizedHeight;
+			ScalingBitmap = BitmapFactory.decodeFile( BitmapFilePath );
+			ResizeImage = Bitmap.createScaledBitmap( ScalingBitmap, BitmapOptions.outWidth, BitmapOptions.outHeight, true );
+			if( ScalingBitmap.hashCode() != ResizeImage.hashCode() ) ScalingBitmap.recycle();
+		}
+		catch( Exception e ) {
+			if( BuildConfig.DEBUG ) e.printStackTrace();
+		}
+		return ResizeImage;
+	}
+
+	public static int GetRotationDegree( String BitmapFilePath ) {
+		int RotationDegree = 0;
+		try {
+			ExifInterface Exif = new ExifInterface( BitmapFilePath );
+			int ExifOrientation = Exif.getAttributeInt( ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL );
+			switch( ExifOrientation ) {
+				case ExifInterface.ORIENTATION_ROTATE_90 : RotationDegree = 90;
+				case ExifInterface.ORIENTATION_ROTATE_180 : RotationDegree = 180;
+				case ExifInterface.ORIENTATION_ROTATE_270 : RotationDegree = 270;
+				default : RotationDegree = 0;
+			}
+		}
+		catch( IOException e ) {
+			if( BuildConfig.DEBUG ) e.printStackTrace();
+		}
+		// 세로로 보이게 변경
+		return 90;
+	}
+
+	public static Bitmap GetRotateBitmap( Bitmap SourceBitmap, int RotateDegree, boolean SourceBitmapRecycle ) {
+		if( SourceBitmap == null ) return null;
+		Matrix MatrixInstance = new Matrix();
+		MatrixInstance.postRotate( RotateDegree );
+		Bitmap RotateBitmap = Bitmap.createBitmap( SourceBitmap, 0, 0, SourceBitmap.getWidth(), SourceBitmap.getHeight(), MatrixInstance, true );
+		if( SourceBitmapRecycle && SourceBitmap.hashCode() != RotateBitmap.hashCode() ) SourceBitmap.recycle();
+		return RotateBitmap;
+	}
+
+	public static boolean WriteBitmapToFile( Bitmap SourceBitmap, String SaveFileFullPath, int CompressQuality, boolean SourceBitmapRecycle ) {
+		try {
+			Bitmap.CompressFormat BitmapFormat = Bitmap.CompressFormat.JPEG;
+			FileOutputStream FileOutputStreamInstance = new FileOutputStream( SaveFileFullPath );
+			if( SourceBitmap.compress( BitmapFormat, CompressQuality, FileOutputStreamInstance ) == false ) return false;
+			FileOutputStreamInstance.close();
+			if( SourceBitmapRecycle ) SourceBitmap.recycle();
+		}
+		catch( Exception e ) {
+			if( BuildConfig.DEBUG ) e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 	public static InputStream GetInputStreamFromFile( String FilePath ) {
 		FileInputStream InputStreamInstance;
 		try {
@@ -114,6 +187,35 @@ public class CommonUtil {
 			CustomProgressDialog.getWindow().setAttributes( params );
 			return CustomProgressDialog;
 		}
+	}
+
+	public static String GetNoneOverlapFileName( String FileName ) {
+		int StringIndex;
+		String RandomFileName;
+		String SystemClockString;
+		String FileNameExtension;
+
+		if( FileName == null || FileName.length() == 0 ) return FileName;
+		SystemClockString = Long.toString( SystemClock.uptimeMillis() );
+		SystemClockString = SystemClockString.substring( SystemClockString.length()-6 );
+		RandomFileName = GetFileNameFromFilePath( FileName );
+		if( RandomFileName.length() == 0 ) return RandomFileName;
+
+		StringIndex = RandomFileName.lastIndexOf( '.' );
+		if( StringIndex == -1 ) RandomFileName = RandomFileName + SystemClockString;
+		else {
+			FileNameExtension = RandomFileName.substring( StringIndex, RandomFileName.length() );
+			RandomFileName = RandomFileName.substring( 0, StringIndex ) + SystemClockString + FileNameExtension;
+		}
+		return RandomFileName;
+	}
+
+	public static String GetFileNameFromFilePath( @NonNull String FilePath ) {
+		int StringIndex = FilePath.lastIndexOf( File.separatorChar );
+		if( StringIndex == -1 ) return FilePath;
+		String FileName = FilePath.substring( StringIndex+1, FilePath.length() );
+		if( FileName.length() > 0 ) return FileName;
+		else return null;
 	}
 
 	public static boolean DeleteFile( String FilePath ) {
