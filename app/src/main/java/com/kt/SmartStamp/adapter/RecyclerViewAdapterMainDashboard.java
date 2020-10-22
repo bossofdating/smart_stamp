@@ -2,6 +2,7 @@ package com.kt.SmartStamp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import com.kt.SmartStamp.listener.LIST_ITEM_LISTENER;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<RecyclerViewAdapterMainDashboard.ViewHolder> implements View.OnClickListener {
+	private static final long MIN_CLICK_INTERVAL = 1000;
+	private long mLastClickTime;
+
 	/******************************************* ViewHolder *******************************************/
 	class ViewHolder extends RecyclerView.ViewHolder {
 		public LinearLayout item_linearlayout;
@@ -25,7 +29,6 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 		public TextView cont_state_textview;
 		public TextView cont_date_textview;
 		public TextView cont_detail_textview;
-
 
 		ViewHolder(View view) {
 			super(view);
@@ -105,6 +108,14 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 	/************************************** 클릭 이벤트 핸들러 ****************************************/
 	@Override
 	public void onClick(View view) {
+		// 중복 클릭 방지
+		long currentClickTime= SystemClock.uptimeMillis();
+		long elapsedTime=currentClickTime-mLastClickTime;
+		if(elapsedTime<=MIN_CLICK_INTERVAL){
+			return;
+		}
+		mLastClickTime=currentClickTime;
+
 		int position = (int)view.getTag();
 
 		Intent IntentInstance = new Intent(context, DetailReadyActivity.class );

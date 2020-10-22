@@ -30,7 +30,7 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
     private JSONService jsonService;
     private ArrayList<ServerDataTerms> termsArrayList;
 
-    private static final long MIN_CLICK_INTERVAL = 500;
+    private static final long MIN_CLICK_INTERVAL = 1000;
     private long mLastClickTime;
 
     private CheckBox chkAgree01;

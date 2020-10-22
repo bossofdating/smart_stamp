@@ -20,6 +20,11 @@
         <item name="windowNoTitle">false</item>
     </style>
 
+    <style name="AppTheme.StatusBar.Transparent" parent="AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+
     <style name="CustomTransparentProgressDialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

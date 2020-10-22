@@ -100,8 +100,8 @@ public class CommonUtil {
 		catch( IOException e ) {
 			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
-		// 세로로 보이게 변경
-		return 90;
+
+		return RotationDegree;
 	}
 
 	public static Bitmap GetRotateBitmap( Bitmap SourceBitmap, int RotateDegree, boolean SourceBitmapRecycle ) {

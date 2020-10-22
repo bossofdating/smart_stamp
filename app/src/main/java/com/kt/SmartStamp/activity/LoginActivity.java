@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private JSONService jsonService;
     private PackageInfo packageInfo;
 
-    private static final long MIN_CLICK_INTERVAL = 500;
+    private static final long MIN_CLICK_INTERVAL = 1000;
     private long mLastClickTime;
 
     private Button loginButton;

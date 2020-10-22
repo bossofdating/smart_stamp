@@ -25,13 +25,16 @@ public class HTTP_DEFINE {
 	public static String HTTP_URL_CONT_DETAIL = SERVER_ADDRESS + "contractdetail/%s";
 	public static String HTTP_URL_DOC_LIST = SERVER_ADDRESS + "doclist/%s";
 	public static String HTTP_URL_DOC_REG = SERVER_ADDRESS + "incbefdoc/%s/%s";
+	public static String HTTP_URL_DOC_MOD = SERVER_ADDRESS + "uptbefdoc/%s/%s";
+	public static String HTTP_URL_DOC_DEL = SERVER_ADDRESS + "delbefdoc/%s";
+	public static String HTTP_URL_CONT_COMPLETE = SERVER_ADDRESS + "contract/%s";
 
 	public static String GetUploadImageFileName( int ImageFileType, int MemberIndex, String FileNameExtension ) {
 		String FileNamePrefix = "";
 		SimpleDateFormat SimpleDateFormatInstance = new SimpleDateFormat( "MMddHHmm", Locale.getDefault() );
 		String CurrentDateString = SimpleDateFormatInstance.format( new Date( System.currentTimeMillis() ) );
 		switch( ImageFileType ) {
-			case COMMON_DEFINE.IMAGE_FILE_TYPE_PROFILE :	FileNamePrefix = "p%08d%d%s%s"; break;
+			case COMMON_DEFINE.IMAGE_FILE_TYPE_PROFILE :	FileNamePrefix = "d%d%s%s"; break;
 		}
 		FileNamePrefix = String.format( FileNamePrefix, MemberIndex, CurrentDateString, FileNameExtension );
 		return CommonUtil.GetNoneOverlapFileName( FileNamePrefix );

@@ -107,30 +107,27 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="1dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/doc_reg_button"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17dp"
-                    android:textColor="@color/commonTextWhite"
-                    android:textStyle="bold"
-                    android:text="문서 등록"
-                    android:background="@drawable/btn_rounded_primary_fill"/>
+                    android:textSize="13dp"
+                    android:textColor="@color/grey_60"
+                    android:text="날인 전"/>
 
-                <Button
-                    android:id="@+id/doc_complete_button"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17dp"
-                    android:textColor="@color/commonTextWhite"
-                    android:textStyle="bold"
-                    android:text="등록 완료"
-                    android:background="@drawable/btn_rounded_red_fill"/>
+                    android:textSize="13dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="날인 후"/>
             </LinearLayout>
 
             <GridView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -139,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@color/Common_Divider_Gray"
-                android:numColumns="3"
+                android:numColumns="1"
                 android:verticalSpacing="2dp"
                 android:horizontalSpacing="2dp"
                 android:stretchMode="columnWidth"

@@ -47,6 +47,14 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="com.kt.SmartStamp.activity.DetailListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.kt.SmartStamp.activity.DetailCompleteActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.ActivityImageSelector"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Sub" />
@@ -55,6 +63,11 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.TitleBar" />
+
+        <activity
+            android:name=".activity.Activity_ImageViewer_Multi"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.StatusBar.Transparent" />
 
         <!-- 프로바이더 -->
         <provider

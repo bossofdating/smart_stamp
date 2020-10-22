@@ -42,7 +42,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	public static RecyclerViewAdapterMainDashboard recyclerViewAdapterMainDashboard;
 
 	public static final int ANIMATION_DELAY_TIME = 100;
-	private static final long MIN_CLICK_INTERVAL = 500;
+	private static final long MIN_CLICK_INTERVAL = 1000;
 	private long mLastClickTime;
 	private int offset = 0;
 
@@ -131,24 +131,8 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) { super.onConfigurationChanged(newConfig); }
 
-	/********************************** 리스트 아이템 이벤트 핸들러 **********************************/
 	@Override
-	public void onItemClick(Object CallerObject, int clickType, int position) {
-		// 중복 클릭인 경우
-		long currentClickTime= SystemClock.uptimeMillis();
-		long elapsedTime=currentClickTime-mLastClickTime;
-		if(elapsedTime<=MIN_CLICK_INTERVAL){
-			return;
-		}
-		mLastClickTime=currentClickTime;
-
-		switch(clickType) {
-			case COMMON_DEFINE.LIST_ITEM_CLICK_TYPE_NORMAL :
-				break;
-			case COMMON_DEFINE.LIST_ITEM_CLICK_TYPE_DELETE :
-				break;
-		}
-	}
+	public void onItemClick(Object CallerObject, int clickType, int position) {	}
 
 	@Override
 	public void onReachedLastItem(Object callerObject) {}
