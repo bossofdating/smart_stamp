@@ -170,7 +170,7 @@ public class DetailCompleteActivity extends AppCompatActivity implements View.On
     private void requestHttpDataDocList(int offset) {
         httpAsyncRequest.AddHeaderData("cont_idx", contIdx);
         httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
-        httpAsyncRequest.AddHeaderData("order", "a");
+        httpAsyncRequest.AddHeaderData("order", "y");
         httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_DOC_LIST, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 2);
     }
 

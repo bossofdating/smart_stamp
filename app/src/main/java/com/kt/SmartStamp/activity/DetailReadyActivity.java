@@ -50,6 +50,7 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
     private static final long MIN_CLICK_INTERVAL = 1000;
     private long mLastClickTime;
     private int offset = 0;
+    private int doc_before_cnt = 0;
 
     public static GridViewAdapterDocReady GVADoc;
     private GridView gridViewDoc;
@@ -164,7 +165,8 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
                 DisplayDialog_Doc();
                 break;
             case R.id.doc_complete_button :
-                DisplayDialog_Doc_Com();
+                if (doc_before_cnt > 0) DisplayDialog_Doc_Com();
+                else Toast.makeText(this, "등록된 문서가 없어서 등록을 완료할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -197,7 +199,7 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
     private void requestHttpDataDocList(int offset) {
         httpAsyncRequest.AddHeaderData("cont_idx", contIdx);
         httpAsyncRequest.AddHeaderData("offset", Integer.toString(offset));
-        httpAsyncRequest.AddHeaderData("order", "b");
+        httpAsyncRequest.AddHeaderData("order", "n");
         httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_DOC_LIST, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 2);
     }
     // 문서 등록 -3
@@ -215,12 +217,12 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
         String ServerFileName = HTTP_DEFINE.GetUploadImageFileName( COMMON_DEFINE.IMAGE_FILE_TYPE_PROFILE, Integer.parseInt(sessionManager.getMemIdx()), ".jpg" );
         if( ConvertedFilePath.length() > 0 ) {
             httpAsyncRequest.SetUseProgress( true );
-            httpAsyncRequest.UploadPostImage(String.format(HTTP_DEFINE.HTTP_URL_DOC_MOD, modifyDocBefIdx, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 4, ConvertedFilePath, "picture", ServerFileName);
+            httpAsyncRequest.UploadPostImage(String.format(HTTP_DEFINE.HTTP_URL_DOC_MOD, ArrayListDoc.get(Integer.parseInt(modifyDocBefIdx)).doc_bef_idx, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 4, ConvertedFilePath, "picture", ServerFileName);
         }
     }
     // 문서 삭제 -5
     private void requestHttpDataDocDelete() {
-        httpAsyncRequest.AddHeaderData("doc_bef_idx", modifyDocBefIdx);
+        httpAsyncRequest.AddHeaderData("doc_bef_idx", ArrayListDoc.get(Integer.parseInt(modifyDocBefIdx)).doc_bef_idx);
         httpAsyncRequest.RequestHttpPatchData(String.format(HTTP_DEFINE.HTTP_URL_DOC_DEL, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 5);
     }
     // 문서 등록 완료 -6
@@ -254,11 +256,14 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
                     + " ~ " + jsonService.GetString("appr_st_dt", null));
             contDetailTextView.setText(jsonService.GetString("cont_detail", null));
 
-            int doc_before_cnt = Integer.parseInt(jsonService.GetString("doc_before_cnt", "0"));
+            doc_before_cnt = Integer.parseInt(jsonService.GetString("doc_before_cnt", "0"));
             if (doc_before_cnt > 0) {
                 contStateTextView.setText("등록중 (" + jsonService.GetString("doc_before_cnt", null) + ")");
                 contStateTextView.setTextColor(this.getResources().getColor(R.color.colorAccent));
-            } else contStateTextView.setText("등록 대기");
+            } else {
+                contStateTextView.setText("등록 대기");
+                contStateTextView.setTextColor(this.getResources().getColor(R.color.colorBlue));
+            }
 
             displayLayoutDefault(offset);
         }
@@ -413,20 +418,6 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
         DialogBuilder.setOnNegativeButtonClickListener("취소", null);
         DialogBuilder.show();
     }
-    private void DisplayDialog_Doc_Complete() {
-        Dialog_Common DialogBuilder = new Dialog_Common(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
-        DialogBuilder.setTitle("선택");
-        SELECTED_PROFILE_PHOTO_DIALOG_ITEM = new ArrayList<>(Arrays.asList( getResources().getStringArray(R.array.photo_act)));
-        DialogBuilder.setListItem(SELECTED_PROFILE_PHOTO_DIALOG_ITEM, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                ActionPhotoDialog(which);
-                dialog.dismiss();
-            }
-        });
-        DialogBuilder.setOnNegativeButtonClickListener("취소", null);
-        DialogBuilder.show();
-    }
     private void DisplayDialog_Doc_Act() {
         Dialog_Common DialogBuilder = new Dialog_Common(this, R.style.Theme_AppCompat_Light_Dialog_Alert);
         DialogBuilder.setTitle("선택");
@@ -444,7 +435,7 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
     private void DisplayDialog_Doc_Com() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogStyle);
         builder.setTitle("등록 완료 확인");
-        builder.setMessage("문서 등록을 완료하시겠습니까? 문서 등록 완료 후에는 수정이 불가합니다.");
+        builder.setMessage("문서 등록을 완료하시겠습니까?\n문서 등록 완료 후에는 수정이 불가합니다.");
         builder.setNegativeButton("취소", null);
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
             @Override

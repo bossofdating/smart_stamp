@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
+import com.kt.SmartStamp.activity.DetailReadyActivity;
 import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainDashboard;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
@@ -140,8 +141,19 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	/************************************ 액티비티 실행 결과 수신 *************************************/
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode) { }
+		switch(requestCode) {
+			case 0:
+				offset = 0;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.detach(this).attach(this).commit();
+		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void startActivityfrag(int position) {
+		Intent IntentInstance = new Intent(getContext(), DetailReadyActivity.class );
+		IntentInstance.putExtra("cont_idx", contractArrayList.get(position).cont_idx);
+		startActivityForResult(IntentInstance, 0);
 	}
 
 	/**************************************** 레이아웃 출력 *******************************************/
@@ -207,7 +219,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 				contractArrayList.add(serverDataContract);
 			}
 
-			recyclerViewAdapterMainDashboard = new RecyclerViewAdapterMainDashboard(getContext(), contractArrayList, this);
+			recyclerViewAdapterMainDashboard = new RecyclerViewAdapterMainDashboard(getContext(), contractArrayList, this, this);
 			recyclerViewAdapterMainDashboard.notifyDataSetChanged();
 			recyclerViewMainDashboard.setLayoutManager(new LinearLayoutManager(getActivity()));
 			recyclerViewMainDashboard.setAdapter(recyclerViewAdapterMainDashboard);

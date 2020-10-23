@@ -59,7 +59,7 @@ public class GridViewAdapterDocReady extends BaseAdapter {
 		params.height = Integer.parseInt(String.valueOf(Math.round(layerHeight)));
 
 		ImageView_Doc.setLayoutParams(params);
-		LinearLayout_Doc.setTag(ArrayList_Doc.get(Position).doc_bef_idx);
+		LinearLayout_Doc.setTag(Position);
 
 		String imageURL = ArrayList_Doc.get(Position).bef_picture;
 		Glide.with(context).load(imageURL).into(ImageView_Doc);

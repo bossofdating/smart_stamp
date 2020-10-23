@@ -28,6 +28,10 @@ public class HTTP_DEFINE {
 	public static String HTTP_URL_DOC_MOD = SERVER_ADDRESS + "uptbefdoc/%s/%s";
 	public static String HTTP_URL_DOC_DEL = SERVER_ADDRESS + "delbefdoc/%s";
 	public static String HTTP_URL_CONT_COMPLETE = SERVER_ADDRESS + "contract/%s";
+	public static String HTTP_URL_DOC_REG_AFT = SERVER_ADDRESS + "incaftdoc/%s/%s/%s";
+	public static String HTTP_URL_DOC_MOD_AFT = SERVER_ADDRESS + "uptaftdoc/%s/%s";
+	public static String HTTP_URL_DOC_DEL_AFT = SERVER_ADDRESS + "delaftdoc/%s";
+	public static String HTTP_URL_STAMP = SERVER_ADDRESS + "stamp/%s";
 
 	public static String GetUploadImageFileName( int ImageFileType, int MemberIndex, String FileNameExtension ) {
 		String FileNamePrefix = "";

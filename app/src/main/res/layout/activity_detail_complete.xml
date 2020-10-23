@@ -63,7 +63,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="13dp"
-                        android:textColor="@color/colorBlue"/>
+                        android:textColor="@color/colorPrimary"/>
 
                     <TextView
                         android:id="@+id/cont_name_textview"

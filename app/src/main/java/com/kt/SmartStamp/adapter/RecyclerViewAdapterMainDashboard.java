@@ -1,7 +1,6 @@
 package com.kt.SmartStamp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,8 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kt.SmartStamp.R;
-import com.kt.SmartStamp.activity.DetailReadyActivity;
 import com.kt.SmartStamp.data.ServerDataContract;
+import com.kt.SmartStamp.fragment.FragmentMainDashboard;
 import com.kt.SmartStamp.listener.LIST_ITEM_LISTENER;
 
 import java.util.ArrayList;
@@ -45,12 +44,14 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 	private ArrayList<ServerDataContract> contractArrayList;
 	private LayoutInflater layoutInflater;
 	private Context context;
+	private FragmentMainDashboard fragment;
 
 	/******************************************** 생성자 **********************************************/
-	public RecyclerViewAdapterMainDashboard(Context context, ArrayList<ServerDataContract> contractArrayList, LIST_ITEM_LISTENER EventListener) {
+	public RecyclerViewAdapterMainDashboard(Context context, ArrayList<ServerDataContract> contractArrayList, LIST_ITEM_LISTENER EventListener, FragmentMainDashboard fragment) {
 		// 외부변수 연결
 		this.context = context;
 		this.contractArrayList = contractArrayList;
+		this.fragment = fragment;
 
 		// 인스턴스 생성
 		layoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -92,7 +93,10 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 		if (doc_before_cnt > 0) {
 			Holder.cont_state_textview.setText("등록중 (" + serverDataContract.doc_before_cnt + ")");
 			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorAccent));
-		} else Holder.cont_state_textview.setText("등록 대기");
+		} else {
+			Holder.cont_state_textview.setText("등록 대기");
+			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorBlue));
+		}
 	}
 	/**************************************** OnViewRecycled ****************************************/
 	@Override
@@ -118,8 +122,7 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 
 		int position = (int)view.getTag();
 
-		Intent IntentInstance = new Intent(context, DetailReadyActivity.class );
-		IntentInstance.putExtra("cont_idx", contractArrayList.get(position).cont_idx);
-		context.startActivity( IntentInstance );
+		fragment.startActivityfrag(position);
 	}
+
 }

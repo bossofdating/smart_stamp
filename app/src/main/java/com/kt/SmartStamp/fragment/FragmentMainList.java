@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
+import com.kt.SmartStamp.activity.DetailListActivity;
 import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainList;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
@@ -130,8 +132,19 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 	/************************************ 액티비티 실행 결과 수신 *************************************/
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch(requestCode) { }
+		switch(requestCode) {
+			case 0:
+				offset = 0;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				ft.detach(this).attach(this).commit();
+		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	public void startActivityfrag(int position) {
+		Intent IntentInstance = new Intent(getContext(), DetailListActivity.class );
+		IntentInstance.putExtra("cont_idx", contractArrayList.get(position).cont_idx);
+		startActivityForResult(IntentInstance, 0);
 	}
 
 	/**************************************** 레이아웃 출력 *******************************************/
@@ -190,7 +203,7 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 				contractArrayList.add(serverDataContract);
 			}
 
-			recyclerViewAdapterMainList = new RecyclerViewAdapterMainList(getActivity(), contractArrayList, this);
+			recyclerViewAdapterMainList = new RecyclerViewAdapterMainList(getActivity(), contractArrayList, this, this);
 			recyclerViewAdapterMainList.notifyDataSetChanged();
 			recyclerViewMainList.setLayoutManager(new LinearLayoutManager(getActivity()));
 			recyclerViewMainList.setAdapter(recyclerViewAdapterMainList);

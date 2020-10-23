@@ -107,6 +107,35 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/start_sign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="17dp"
+                    android:textColor="@color/commonTextWhite"
+                    android:textStyle="bold"
+                    android:text="도장 열기"
+                    android:background="@drawable/btn_rounded_primary_fill"/>
+
+                <Button
+                    android:id="@+id/doc_complete_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="17dp"
+                    android:textColor="@color/commonTextWhite"
+                    android:textStyle="bold"
+                    android:text="날인 완료"
+                    android:background="@drawable/btn_rounded_red_fill"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="1dp"
                 android:paddingStart="5dp"
