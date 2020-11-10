@@ -86,7 +86,7 @@ public class RecyclerViewAdapterMainDashboard extends RecyclerView.Adapter<Recyc
 		// 레이아웃 출력
 		ServerDataContract serverDataContract = contractArrayList.get(position);
 		Holder.cont_name_textview.setText(serverDataContract.cont_name);
-		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
+		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_ed_dt);
 		Holder.cont_detail_textview.setText(serverDataContract.cont_detail);
 
 		int doc_before_cnt = Integer.parseInt(serverDataContract.doc_before_cnt);

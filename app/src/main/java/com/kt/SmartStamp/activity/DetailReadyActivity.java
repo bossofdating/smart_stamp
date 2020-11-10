@@ -253,7 +253,7 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
         if(jsonService != null) {
             contNameTextView.setText(jsonService.GetString("cont_name", null));
             contDateTextView.setText("반출 기간 : " + jsonService.GetString("appr_st_dt", null)
-                    + " ~ " + jsonService.GetString("appr_st_dt", null));
+                    + " ~ " + jsonService.GetString("appr_ed_dt", null));
             contDetailTextView.setText(jsonService.GetString("cont_detail", null));
 
             doc_before_cnt = Integer.parseInt(jsonService.GetString("doc_before_cnt", "0"));

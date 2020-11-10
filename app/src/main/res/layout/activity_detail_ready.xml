@@ -27,7 +27,7 @@
             android:textSize="20dp"
             android:textColor="@color/commonTextDefault"
             android:textStyle="bold"
-            android:text="계약 상세 정보"/>
+            android:text="계약 상세"/>
     </RelativeLayout>
 
     <LinearLayout

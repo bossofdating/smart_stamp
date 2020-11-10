@@ -1,6 +1,8 @@
 package com.kt.SmartStamp.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -91,7 +93,7 @@ public class RecyclerViewAdapterMainList extends RecyclerView.Adapter<RecyclerVi
 		// 레이아웃 출력
 		ServerDataContract serverDataContract = contractArrayList.get(position);
 		Holder.cont_name_textview.setText(serverDataContract.cont_name);
-		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
+		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_ed_dt);
 		Holder.cont_detail_textview.setText(serverDataContract.cont_detail);
 
 		int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
@@ -125,8 +127,28 @@ public class RecyclerViewAdapterMainList extends RecyclerView.Adapter<RecyclerVi
 		}
 		mLastClickTime=currentClickTime;
 
-		int position = (int)view.getTag();
+		if ("y".equals(contractArrayList.get((int)view.getTag()).open_fl)) {
+			int position = (int)view.getTag();
+			fragment.startActivityfrag(position);
+		} else {
+			DisplayDialog_Open_Guide();
+		}
+	}
 
-		fragment.startActivityfrag(position);
+	// 권한 동의 안내 다이얼로그
+	private void DisplayDialog_Open_Guide() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogStyle);
+		builder.setTitle("안내");
+		builder.setMessage("반출 기간에만 열람이 가능합니다.");
+		builder.setCancelable(false);
+		builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+			}
+		});
+		AlertDialog theAlertDialog = builder.create();
+		theAlertDialog.show();
+		TextView textView = theAlertDialog.findViewById(android.R.id.message);
+		textView.setTextSize(15.0f);
 	}
 }

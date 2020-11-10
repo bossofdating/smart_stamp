@@ -36,4 +36,8 @@
     <color name="grey_80">#37474F</color>
     <color name="grey_90">#263238</color>
 
+    <color name="orange_300">#FFB74D</color>
+    <color name="orange_700">#F57C00</color>
+    <color name="orange_800">#EF6C00</color>
+
 </resources>

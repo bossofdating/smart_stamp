@@ -316,7 +316,7 @@ public class HTTP_UTIL {
 
 	public String RequestDataUpload( String RequestURL, String Method, String Token, InputStream UploadData, String FileParameterName, String ServerStoreFileName ) {
 		// HTTP 프로토콜 사전 정의 문자열
-		String HTTP_DEFINE_STRING_BOUNDARY = 				"*****";
+		String HTTP_DEFINE_STRING_BOUNDARY = 				"^----^";
 		String HTTP_DEFINE_STRING_LINE_END =	 				"\r\n";
 		String HTTP_DEFINE_STRING_HYPHEN =	 					"--";
 

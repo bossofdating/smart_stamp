@@ -27,7 +27,27 @@
             android:textSize="20dp"
             android:textColor="@color/commonTextDefault"
             android:textStyle="bold"
-            android:text="계약 상세 정보"/>
+            android:text="계약 상세"/>
+
+        <TextView
+            android:id="@+id/textview_battery"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginRight="55dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:textColor="@color/commonTextDefault"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageview_battery"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/not_connect"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -118,8 +138,8 @@
                     android:textSize="17dp"
                     android:textColor="@color/commonTextWhite"
                     android:textStyle="bold"
-                    android:text="도장 열기"
-                    android:background="@drawable/btn_rounded_primary_fill"/>
+                    android:text="인장 연결"
+                    android:background="@drawable/btn_rounded_gray_fill"/>
 
                 <Button
                     android:id="@+id/doc_complete_button"

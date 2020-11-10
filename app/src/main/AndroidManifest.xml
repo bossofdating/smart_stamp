@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <dist:module dist:instant="true" />
 
@@ -31,11 +32,15 @@
         </activity>
 
         <activity
-            android:name="com.kt.SmartStamp.activity.MainActivity"
+            android:name="com.kt.SmartStamp.activity.LoginActivity"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="com.kt.SmartStamp.activity.LoginActivity"
+            android:name="com.kt.SmartStamp.activity.ConnectActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.kt.SmartStamp.activity.MainActivity"
             android:screenOrientation="portrait" />
 
         <activity
@@ -68,6 +73,10 @@
             android:name=".activity.Activity_ImageViewer_Multi"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.StatusBar.Transparent" />
+
+        <service android:name=".service.BleService"
+            android:enabled="true"
+            android:exported="true"/>
 
         <!-- 프로바이더 -->
         <provider

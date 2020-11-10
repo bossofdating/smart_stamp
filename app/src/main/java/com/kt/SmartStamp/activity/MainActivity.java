@@ -15,6 +15,7 @@ import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.fragment.FragmentMainCompleteList;
 import com.kt.SmartStamp.fragment.FragmentMainDashboard;
 import com.kt.SmartStamp.fragment.FragmentMainList;
+import com.kt.SmartStamp.fragment.FragmentMainSetting;
 
 public class MainActivity extends AppCompatActivity {
     public static final int FRAGMENT_DASHBOARD = 0;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public void displayFragment(int FragmentIndex) {
         switch(FragmentIndex) {
             case FRAGMENT_DASHBOARD :
-                titleTextView.setText("대시보드");
+                titleTextView.setText("등록 대기");
                 fragment = new FragmentMainDashboard();
                 break;
             case FRAGMENT_LIST :
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case FRAGMENT_SETTING :
                 titleTextView.setText("설정");
+                fragment = new FragmentMainSetting();
                 break;
         }
 

@@ -54,7 +54,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton.setOnClickListener(this);
 
         // 자동 로그인 (개발완료 후 제거)
-        requestHttpDataLogin("admin", "admin", "1.0");
+        //requestHttpDataLogin("admin", "admin", "1.0");
+        requestHttpDataLogin("82047551", "new1234!", "1.0");
     }
 
     /*************************************** 클릭 이벤트 핸들러 ***************************************/
@@ -121,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             sessionManager.setMemName(memName);
             sessionManager.setUtName(utName);
 
-            if(loginFlag != null && "Failed".equals(loginFlag)) Toast.makeText(this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
+            if (loginFlag != null && "Failed".equals(loginFlag)) Toast.makeText(this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
             else if(loginFlag != null && "Exception".equals(loginFlag)) Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
             else {
                 finish();

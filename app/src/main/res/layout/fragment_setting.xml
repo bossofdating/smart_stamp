@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorBackGround"
+    android:id="@+id/list_linearlayout">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:scrollingCache="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/textview_appversion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:gravity="right"
+                    android:textColor="@color/grey_80" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_large" />
+
+            <!--<LinearLayout
+                android:id="@+id/worksetting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/overlay_light_80"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_marginLeft="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:layout_weight="1"
+                    android:text="테스트중"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textColor="@color/grey_80" />
+
+                <ImageButton
+                    android:layout_width="@dimen/spacing_xmlarge"
+                    android:layout_height="@dimen/spacing_xmlarge"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:background="@android:color/transparent"
+                    android:tint="@color/grey_40"
+                    android:src ="@drawable/ic_arrow_right" />
+            </LinearLayout>-->
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

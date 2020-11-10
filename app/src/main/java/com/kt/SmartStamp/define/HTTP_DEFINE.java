@@ -11,13 +11,18 @@ import java.util.Locale;
 
 @SuppressLint( "DefaultLocale" )
 public class HTTP_DEFINE {
-	// DEV
-	private static String SERVER_ADDRESS = "http://3.34.249.16/smartstampAPI/";
-    // PROD
-	//private static String SERVER_ADDRESS = "";
+	// AWS
+	//private static String SERVER_ADDRESS = "http://3.34.249.16/smartstampAPI/";
+	// DEV / PROD
+	private static String SERVER_ADDRESS = "http://app.iotstamp.kt.co.kr/smartstampAPI/";
 
 	// API URL
-	public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login";
+	// AWS
+	//public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login/aws";
+	// DEV
+	public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login/dev";
+	// PROD
+	//public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login";
     public static String HTTP_URL_TERMS_LIST = SERVER_ADDRESS + "terms";
 	public static String HTTP_URL_TERMS_AGREE = SERVER_ADDRESS + "terms/%s";
 	public static String HTTP_URL_CONT_LIST = SERVER_ADDRESS + "contract/%s";
@@ -31,6 +36,7 @@ public class HTTP_DEFINE {
 	public static String HTTP_URL_DOC_REG_AFT = SERVER_ADDRESS + "incaftdoc/%s/%s/%s";
 	public static String HTTP_URL_DOC_MOD_AFT = SERVER_ADDRESS + "uptaftdoc/%s/%s";
 	public static String HTTP_URL_DOC_DEL_AFT = SERVER_ADDRESS + "delaftdoc/%s";
+	public static String HTTP_URL_STAMP_CHECK = SERVER_ADDRESS + "stampcheck/%s";
 	public static String HTTP_URL_STAMP = SERVER_ADDRESS + "stamp/%s";
 
 	public static String GetUploadImageFileName( int ImageFileType, int MemberIndex, String FileNameExtension ) {

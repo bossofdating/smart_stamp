@@ -191,13 +191,14 @@ public class DetailCompleteActivity extends AppCompatActivity implements View.On
         if(jsonService != null) {
             contNameTextView.setText(jsonService.GetString("cont_name", null));
             contDateTextView.setText("반출 기간 : " + jsonService.GetString("appr_st_dt", null)
-                    + " ~ " + jsonService.GetString("appr_st_dt", null));
+                    + " ~ " + jsonService.GetString("appr_ed_dt", null));
             contDetailTextView.setText(jsonService.GetString("cont_detail", null));
 
             int doc_after_cnt = Integer.parseInt(jsonService.GetString("doc_after_cnt", "0"));
             if (doc_after_cnt > 0) {
-                contStateTextView.setText("문서 (" + jsonService.GetString("doc_after_cnt", null) + ")");
-                contStateTextView.setTextColor(this.getResources().getColor(R.color.colorAccent));
+                contStateTextView.setText("문서 (" + jsonService.GetString("doc_after_cnt", null) + "/"
+                        + jsonService.GetString("doc_before_cnt", null) +  ")");
+                contStateTextView.setTextColor(this.getResources().getColor(R.color.colorPrimary));
             }
 
             displayLayoutDefault(offset);

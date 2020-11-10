@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">S-Stamp</string>
+    <string name="app_service">S-Stamp 서비스가 실행중입니다.</string>
 
     <string name="agree_title">개인정보 및 위치제공에 대한 안내를 끝까지 읽고 동의해주세요</string>
     <string name="agree_chk_01">개인정보 수집·이용 동의</string>

@@ -2,14 +2,30 @@ package com.kt.SmartStamp.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
 import android.os.SystemClock;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -25,18 +41,25 @@ import android.widget.Toast;
 import com.kt.SmartStamp.BuildConfig;
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.adapter.GridViewAdapterDocList;
+import com.kt.SmartStamp.data.AppVariables;
 import com.kt.SmartStamp.data.ServerDataDoc;
 import com.kt.SmartStamp.data.ServerDataPhoto;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
 import com.kt.SmartStamp.listener.HTTP_RESULT_LISTENER;
+import com.kt.SmartStamp.service.BleService;
+import com.kt.SmartStamp.service.GpsTracker;
 import com.kt.SmartStamp.service.SessionManager;
 import com.kt.SmartStamp.utility.HTTP_ASYNC_REQUEST;
 import com.kt.SmartStamp.utility.JSONService;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class DetailListActivity extends AppCompatActivity implements View.OnClickListener, HTTP_RESULT_LISTENER, AdapterView.OnItemClickListener {
     public static HTTP_ASYNC_REQUEST httpAsyncRequest;
@@ -64,8 +87,12 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     public ImageView backImageview;
     public Button docCompleteButton;
     public Button startSign;
+    public ImageView imageviewBattery;
+    public TextView textviewBattery;
 
     private String contIdx;
+    public String status = "";
+    private String mac = "";
     private int dposition;
     public static int pageNum;
     int layerWidth = 0;
@@ -74,8 +101,15 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private String modifyDocBefIdx;
 
     public ArrayList<ServerDataDoc> ArrayListDoc;
-
     public static Context mContext;
+    private static GpsTracker gpsTracker;
+
+    final static int BT_REQUEST_ENABLE = 100;
+    private static Intent gattServiceIntent = null;
+    private boolean mIsBound;
+    private BleService mBleService = null;
+    public boolean isService = false;
+    public BluetoothAdapter mBluetoothAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +153,8 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         docCompleteButton = findViewById(R.id.doc_complete_button);
         startSign = findViewById(R.id.start_sign);
         backImageview = findViewById(R.id.back_imageview);
+        imageviewBattery = findViewById(R.id.imageview_battery);
+        textviewBattery = findViewById(R.id.textview_battery);
 
         docCompleteButton.setOnClickListener(this);
         startSign.setOnClickListener(this);
@@ -132,6 +168,16 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         pageNum = 0;
 
         requestHttpDataContDetail();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppVariables.device = null;
+        if (mBleService != null) {
+            mBleService.sendClose();
+            setUnbindService();
+        }
     }
 
     /**************************************** 레이아웃 출력 *******************************************/
@@ -159,6 +205,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         mLastClickTime=currentClickTime;
 
         LocationManager locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         switch(view.getId()) {
             case R.id.back_imageview :
@@ -167,16 +214,27 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
             case R.id.start_sign :
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     showDialogForLocationServiceSetting("start_sign");
+                } else if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
+                    Toast.makeText(getApplicationContext(),"블루투스가 활성화 되어 있지 않습니다",Toast.LENGTH_SHORT).show();
+                    Intent intentBthEnable = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(intentBthEnable,BT_REQUEST_ENABLE);
                 } else {
-                    requestHttpDataStamp("test:1234:5678", "open", "서울시 강동구");
+                    status = "open";
+                    requestHttpDataStampCheck();
                 }
                 break;
             case R.id.doc_complete_button :
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     showDialogForLocationServiceSetting("doc_complete_button");
+                } else if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
+                    Toast.makeText(getApplicationContext(),"블루투스가 활성화 되어 있지 않습니다",Toast.LENGTH_SHORT).show();
+                    Intent intentBthEnable = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(intentBthEnable,BT_REQUEST_ENABLE);
                 } else {
-                    if (doc_after_cnt > 0) DisplayDialog_Doc_Com();
-                    else Toast.makeText(this, "등록된 날인 문서가 없어서 날인을 완료할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    if (doc_after_cnt > 0) {
+                        status = "close";
+                        requestHttpDataStampCheck();
+                    } else Toast.makeText(this, "등록된 날인 문서가 없어서 날인을 완료할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -241,26 +299,36 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         httpAsyncRequest.AddHeaderData("com_state", "y");
         httpAsyncRequest.RequestHttpPatchData(String.format(HTTP_DEFINE.HTTP_URL_CONT_COMPLETE, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 6);
     }
-    // 인장 사용 - 7
-    private void requestHttpDataStamp(String stampIdx, String status, String addr) {
+    // 인장 사용 가능 체크 - 7
+    private void requestHttpDataStampCheck() {
         httpAsyncRequest.AddHeaderData("cont_idx", contIdx);
-        httpAsyncRequest.AddHeaderData("stamp_idx", stampIdx);
+        httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_STAMP_CHECK, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 7);
+    }
+    // 인장 사용 - 8
+    private void requestHttpDataStamp() {
+        gpsTracker = new GpsTracker(this);
+        double latitude = gpsTracker.getLatitude();
+        double longitude = gpsTracker.getLongitude();
+
+        httpAsyncRequest.AddHeaderData("cont_idx", contIdx);
+        httpAsyncRequest.AddHeaderData("stamp_idx", mac);
         httpAsyncRequest.AddHeaderData("status", status);
-        httpAsyncRequest.AddHeaderData("addr", addr);
-        httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_STAMP, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 7);
+        httpAsyncRequest.AddHeaderData("addr", getCurrentAddress(latitude, longitude));
+        httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_STAMP, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 8);
     }
 
     /*************************************** Http 요청결과 수신 ***************************************/
     @Override
     public void onReceiveHttpResult(boolean Success, String ResultData, Bitmap ResultBitmap, int RequestCode, int HttpResponseCode, Object PassThroughData) {
-        if(Success) {
-            if(RequestCode == 1) parseJsonContDetail(ResultData);	// 계약 상세 - 1
-            if(RequestCode == 2) parseJsonDocList(ResultData);		// 문서 리스트 - 2
-            if(RequestCode == 3) parseJsonDocReg(ResultData);		// 문서 등록 - 3
-            if(RequestCode == 4) parseJsonDocMod(ResultData);		// 문서 수정 - 4
-            if(RequestCode == 5) parseJsonDocDel(ResultData);		// 문서 삭제 - 5
-            if(RequestCode == 6) parseJsonDocCom(ResultData);		// 날인 완료 - 6
-            if(RequestCode == 7) parseJsonStamp(ResultData);		// 인장 사용 - 7
+        if (Success) {
+            if (RequestCode == 1) parseJsonContDetail(ResultData);	    // 계약 상세 - 1
+            if (RequestCode == 2) parseJsonDocList(ResultData);	    // 문서 리스트 - 2
+            if (RequestCode == 3) parseJsonDocReg(ResultData);		    // 문서 등록 - 3
+            if (RequestCode == 4) parseJsonDocMod(ResultData);		    // 문서 수정 - 4
+            if (RequestCode == 5) parseJsonDocDel(ResultData);		    // 문서 삭제 - 5
+            if (RequestCode == 6) parseJsonDocCom(ResultData);		    // 날인 완료 - 6
+            if (RequestCode == 7) parseJsonStampCheck(ResultData);  	// 인장 사용 가능 체크- 7
+            if (RequestCode == 8) parseJsonStamp(ResultData);		    // 인장 사용 - 8
         } else Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
     }
 
@@ -269,10 +337,10 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private void parseJsonContDetail(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
-        if(jsonService != null) {
+        if (jsonService != null) {
             contNameTextView.setText(jsonService.GetString("cont_name", null));
             contDateTextView.setText("반출 기간 : " + jsonService.GetString("appr_st_dt", null)
-                    + " ~ " + jsonService.GetString("appr_st_dt", null));
+                    + " ~ " + jsonService.GetString("appr_ed_dt", null));
             contDetailTextView.setText(jsonService.GetString("cont_detail", null));
 
             doc_after_cnt = Integer.parseInt(jsonService.GetString("doc_after_cnt", null));
@@ -316,7 +384,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private void parseJsonDocReg(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
-        if(jsonService != null) {
+        if (jsonService != null) {
             pageNum = 0;
             requestHttpDataContDetail();
 
@@ -327,7 +395,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private void parseJsonDocMod(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
-        if(jsonService != null) {
+        if (jsonService != null) {
             pageNum = 0;
             requestHttpDataContDetail();
 
@@ -338,7 +406,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private void parseJsonDocDel(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
-        if(jsonService != null) {
+        if (jsonService != null) {
             pageNum = 0;
             requestHttpDataContDetail();
 
@@ -349,19 +417,108 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private void parseJsonDocCom(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
-        if(jsonService != null) {
-            requestHttpDataStamp("test:1234:5678", "close", "서울시 강동구");
+        if (jsonService != null) {
             Toast.makeText(this, "날인이 완료됐습니다.", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
-    // 인장 사용 - 7
+    // 인장 사용 가능 체크 - 7
+    private void parseJsonStampCheck(String jsonData) {
+        jsonService.CreateJSONObject(jsonData);
+
+        if (jsonService != null) {
+            mac = jsonService.GetString("stamp_idx", null);
+
+            if (isService) {
+                if ("open".equals(status)) {
+                    mBleService.sendOpen();
+                } else if ("close".equals(status)) {
+                    DisplayDialog_Doc_Com();
+                }
+
+                requestHttpDataStamp();
+            } else {
+                Intent IntentInstance = new Intent(this, ConnectActivity.class);
+                IntentInstance.putExtra("mac", mac);
+                startActivityForResult(IntentInstance, 2);
+            }
+        } else {
+            Toast.makeText(this, "등록이 안된 인장입니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+    // 인장 사용 - 8
     private void parseJsonStamp(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
         if(jsonService != null) {
         }
     }
+
+    private void setStartService() {
+        gattServiceIntent = new Intent(this, BleService.class);
+        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        startService(gattServiceIntent);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mServiceMessageReceiver, new IntentFilter(AppVariables.EXTRA_SERVICE_DATA));
+
+        mIsBound = true;
+    }
+    private void setUnbindService() {
+        if(mIsBound){
+            unbindService(mServiceConnection);
+            mIsBound=false;
+        }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceMessageReceiver);
+        stopService(gattServiceIntent);
+    }
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            BleService.LocalBinder mBle = (BleService.LocalBinder)service;
+            mBleService  = mBle.getService();
+            mBleService.initPrepare();
+            isService = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            isService = false;
+        }
+    };
+    private BroadcastReceiver mServiceMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mBleService.bExeThread = false;
+
+            String action = intent.getStringExtra("action");
+            if ("connect".equals(action)) {
+                isService = true;
+                startSign.setText("인장 열기");
+                startSign.setBackgroundResource(R.drawable.btn_rounded_primary_fill);
+            } else if ("disconnect".equals(action)) {
+                isService = false;
+                startSign.setText("인장 연결");
+                startSign.setBackgroundResource(R.drawable.btn_rounded_gray_fill);
+                imageviewBattery.setImageResource(R.drawable.not_connect);
+                textviewBattery.setVisibility(View.GONE);
+            } else if ("battery".equals(action)) {
+                int battery = Integer.parseInt(intent.getStringExtra("battery"));
+                if (battery > 75) {
+                    imageviewBattery.setImageResource(R.drawable.ic_100per);
+                } else if (battery > 50) {
+                    imageviewBattery.setImageResource(R.drawable.ic_75per);
+                } else if (battery > 25) {
+                    imageviewBattery.setImageResource(R.drawable.ic_50per);
+                } else {
+                    imageviewBattery.setImageResource(R.drawable.ic_25per);
+                }
+                textviewBattery.setVisibility(View.VISIBLE);
+                textviewBattery.setText(Integer.toString(battery) + "%");
+            }
+
+            mBleService.bExeThread = true;
+        }
+    };
 
     /************************************ 액티비티 실행 결과 수신 ************************************/
     @Override
@@ -387,6 +544,16 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                         else requestHttpDataDocModify(CURRENT_SELECTING_PROFILE_PHOTO_PATH);
                     }
                     break;
+                case BT_REQUEST_ENABLE:
+                    if (resultCode == RESULT_OK) {
+                    } else if (resultCode == RESULT_CANCELED) {
+                        Toast.makeText(getApplicationContext(), "블루투스 연결 후 이용이 가능합니다.", Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                case 2:
+                    if (AppVariables.isRunServiceMainView) {
+                        setStartService();
+                    }
             }
         } catch( Exception e ) {
             if(BuildConfig.DEBUG) e.printStackTrace();
@@ -436,9 +603,9 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.DialogStyle);
         builder.setTitle("위치 정보");
         if ("start_sign".equals(type)) {
-            builder.setMessage("도장을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 On하시겠습니까?");
+            builder.setMessage("인장을 사용하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 사용하시겠습니까?");
         } else if ("doc_complete_button".equals(type)) {
-            builder.setMessage("날인을 완료하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 On하시겠습니까?");
+            builder.setMessage("날인을 완료하기 위해서는 위치 서비스가 필요합니다.\n위치 설정을 사용하시겠습니까?");
         }
         builder.setNegativeButton("취소", null);
         builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -453,4 +620,31 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         TextView textView = theAlertDialog.findViewById(android.R.id.message);
         textView.setTextSize(15.0f);
     }
+
+    public static String getCurrentAddress( double latitude, double longitude) {
+        //지오코더... GPS를 주소로 변환
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        List<Address> addresses;
+        try {
+            addresses = geocoder.getFromLocation(
+                    latitude,
+                    longitude,
+                    7);
+        } catch (IOException ioException) {
+            //네트워크 문제
+            //Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            return "지오코더 서비스 사용불가";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            //Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            return "잘못된 GPS 좌표";
+        }
+        if (addresses == null || addresses.size() == 0) {
+            //Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            return "주소 미발견";
+        }
+
+        Address address = addresses.get(0);
+        return address.getAddressLine(0).toString();
+    }
+
 }

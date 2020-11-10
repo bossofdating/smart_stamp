@@ -51,7 +51,7 @@ public class SplashActivity extends Activity {
                     ignored.printStackTrace();
                 }
             }
-        }, 1000);
+        }, 1500);
     }
 
     /********************************* 권한요청 결과 이벤트 핸들러 ***********************************/

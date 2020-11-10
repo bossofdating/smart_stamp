@@ -215,18 +215,4 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 		displayLayoutDefault();
 	}
 
-	/*************************************** 다이얼로그 출력 ******************************************/
-	private void displayDialogTest(final int ItemPosition) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.DialogStyle);
-		builder.setTitle("title");
-		builder.setMessage("");
-		builder.setNegativeButton("취소", null );
-		builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick( DialogInterface dialog, int which ) {
-			}
-		} );
-		builder.show();
-	}
-
 }

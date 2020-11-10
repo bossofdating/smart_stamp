@@ -85,13 +85,13 @@ public class RecyclerViewAdapterMainCompleteList extends RecyclerView.Adapter<Re
 		// 레이아웃 출력
 		ServerDataContract serverDataContract = contractArrayList.get(position);
 		Holder.cont_name_textview.setText(serverDataContract.cont_name);
-		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_st_dt);
+		Holder.cont_date_textview.setText("반출 기간 : " + serverDataContract.appr_st_dt + " ~ " + serverDataContract.appr_ed_dt);
 		Holder.cont_detail_textview.setText(serverDataContract.cont_detail);
 
 		int doc_after_cnt = Integer.parseInt(serverDataContract.doc_after_cnt);
 		if (doc_after_cnt > 0) {
-			Holder.cont_state_textview.setText("문서 (" + serverDataContract.doc_after_cnt + ")");
-			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorAccent));
+			Holder.cont_state_textview.setText("문서 (" + serverDataContract.doc_after_cnt + "/" + serverDataContract.doc_before_cnt + ")");
+			Holder.cont_state_textview.setTextColor(context.getResources().getColor(R.color.colorPrimary));
 		} else Holder.cont_state_textview.setVisibility(View.GONE);
 	}
 	/**************************************** OnViewRecycled ****************************************/
