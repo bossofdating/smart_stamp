@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_settings_black_24dp"
+        android:icon="@drawable/ic_key_black_24dp"
         android:title="" />
 
 </menu>

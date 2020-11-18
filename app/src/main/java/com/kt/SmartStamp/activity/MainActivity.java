@@ -1,13 +1,16 @@
 package com.kt.SmartStamp.activity;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.annotation.NonNull;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int FRAGMENT_LIST = 1;
     public static final int FRAGMENT_COMPLETE_LIST = 2;
     public static final int FRAGMENT_SETTING = 3;
+
+    private long PREVIOUS_BACK_KEY_PRESSED_TIME;
 
     private FragmentManager fragmentManager;
     private Fragment fragment;
@@ -50,9 +55,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /******************************************* OnCreate *********************************************/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
         setContentView(R.layout.activity_main);
 
         titleTextView = findViewById(R.id.title_textview);
@@ -62,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    /******************************************* OnDestroy ********************************************/
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
     }
 
     /*************************************** 프래그먼트 출력 ******************************************/
@@ -80,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new FragmentMainCompleteList();
                 break;
             case FRAGMENT_SETTING :
-                titleTextView.setText("설정");
+                titleTextView.setText("관리자");
                 fragment = new FragmentMainSetting();
                 break;
         }
@@ -89,4 +103,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.content_base_linearLayout, fragment).commitNowAllowingStateLoss();
     }
 
+    /*************************************** onBackPressed ***************************************/
+    @Override
+    public void onBackPressed() {
+        if( SystemClock.elapsedRealtime() - PREVIOUS_BACK_KEY_PRESSED_TIME > 1000 ) {
+            PREVIOUS_BACK_KEY_PRESSED_TIME = SystemClock.elapsedRealtime();
+            Toast.makeText( this, "뒤로 가기 키를 두 번 누르면 앱이 종료됩니다.", Toast.LENGTH_SHORT ).show();
+        } else super.onBackPressed();
+    }
 }

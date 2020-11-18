@@ -2,10 +2,8 @@ package com.kt.SmartStamp.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,17 +16,15 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Message;
 import android.os.SystemClock;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -59,7 +55,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class DetailListActivity extends AppCompatActivity implements View.OnClickListener, HTTP_RESULT_LISTENER, AdapterView.OnItemClickListener {
     public static HTTP_ASYNC_REQUEST httpAsyncRequest;
@@ -70,12 +65,18 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private ArrayList<String> SELECTED_PROFILE_PHOTO_DIALOG_ITEM;								// 사진 선택 다이얼로그 가변 적용 보관 변수
     private String CURRENT_SELECTING_PROFILE_PHOTO_PATH;										// 선택중인 사진의 경로 (사진 업로드, 수정 상태에서만 일시적으로 사용됨)
 
+    ProgressDialog progressDialog;
+
     private static final long MIN_CLICK_INTERVAL = 1000;
+    private static final long MIN_BTN_CLICK_INTERVAL = 3000;
+    private static final long MIN_OPEN_INTERVAL = 8000;
+    private static final long MIN_CLOSE_INTERVAL = 10000;
     private long mLastClickTime;
     private int offset = 0;
     private int doc_after_cnt = 0;
 
     public static GridViewAdapterDocList GVADoc;
+
     private GridView gridViewDoc;
 
     private LinearLayout linearLayoutDoc;
@@ -91,7 +92,8 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     public TextView textviewBattery;
 
     private String contIdx;
-    public String status = "";
+    public String stampStatus = "";
+    public String buttonType = "";
     private String mac = "";
     private int dposition;
     public static int pageNum;
@@ -114,11 +116,13 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
         setContentView(R.layout.activity_detail_list);
         httpAsyncRequest = new HTTP_ASYNC_REQUEST(this, COMMON_DEFINE.REST_API_AUTHORIZE_KEY_NAME, this);
         sessionManager = new SessionManager(this);
         jsonService = new JSONService();
         mContext = this;
+        progressDialog = new ProgressDialog(DetailListActivity.this);
 
         SELECTED_PROFILE_PHOTO_LIST = new ArrayList<>();
 
@@ -170,14 +174,55 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         requestHttpDataContDetail();
     }
 
+    /*************************************** onDestroy ***************************************/
     @Override
     protected void onDestroy() {
         super.onDestroy();
         AppVariables.device = null;
         if (mBleService != null) {
-            mBleService.sendClose();
             setUnbindService();
         }
+    }
+
+    /*************************************** onBackPressed ***************************************/
+    @Override
+    public void onBackPressed() {
+        if ("open".equals(stampStatus)) {
+            stampStatus = "close";
+            mBleService.sendClose();
+            mBleService.sendOff();
+            requestHttpDataStamp();
+            loading();
+            new java.util.Timer().schedule(
+                    new java.util.TimerTask() {
+                        @Override
+                        public void run() {
+                            loadingEnd();
+                            finish();
+                        }
+                    },
+                    MIN_CLOSE_INTERVAL
+            );
+        } else {
+            finish();
+        }
+    }
+
+    public void loading() {
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        if ("open".equals(stampStatus)) {
+            progressDialog.setMessage("인장 여는중...");
+        } else if ("close".equals(stampStatus)) {
+            progressDialog.setMessage("인장 닫는중...");
+        } else {
+            progressDialog.setMessage("잠시만 기다려 주세요");
+        }
+        progressDialog.show();
+    }
+
+    public void loadingEnd() {
+        progressDialog.dismiss();
     }
 
     /**************************************** 레이아웃 출력 *******************************************/
@@ -199,7 +244,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         // 중복 클릭 방지
         long currentClickTime= SystemClock.uptimeMillis();
         long elapsedTime=currentClickTime-mLastClickTime;
-        if(elapsedTime<=MIN_CLICK_INTERVAL){
+        if(elapsedTime<=MIN_BTN_CLICK_INTERVAL){
             return;
         }
         mLastClickTime=currentClickTime;
@@ -209,7 +254,25 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
 
         switch(view.getId()) {
             case R.id.back_imageview :
-                finish();
+                if ("open".equals(stampStatus)) {
+                    stampStatus = "close";
+                    mBleService.sendClose();
+                    mBleService.sendOff();
+                    requestHttpDataStamp();
+                    loading();
+                    new java.util.Timer().schedule(
+                            new java.util.TimerTask() {
+                                @Override
+                                public void run() {
+                                    loadingEnd();
+                                    finish();
+                                }
+                            },
+                            MIN_CLOSE_INTERVAL
+                    );
+                } else {
+                    finish();
+                }
                 break;
             case R.id.start_sign :
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -219,8 +282,25 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                     Intent intentBthEnable = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intentBthEnable,BT_REQUEST_ENABLE);
                 } else {
-                    status = "open";
-                    requestHttpDataStampCheck();
+                    buttonType = "open";
+                    if ("open".equals(stampStatus)) {
+                        stampStatus = "close";
+                        mBleService.sendClose();
+                        requestHttpDataStamp();
+                        loading();
+                        new java.util.Timer().schedule(
+                                new java.util.TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        loadingEnd();
+                                        startSign.setText("인장 열기");
+                                    }
+                                },
+                                MIN_CLOSE_INTERVAL
+                        );
+                    } else {
+                        requestHttpDataStampCheck();
+                    }
                 }
                 break;
             case R.id.doc_complete_button :
@@ -231,8 +311,8 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                     Intent intentBthEnable = new Intent(mBluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intentBthEnable,BT_REQUEST_ENABLE);
                 } else {
+                    buttonType = "close";
                     if (doc_after_cnt > 0) {
-                        status = "close";
                         requestHttpDataStampCheck();
                     } else Toast.makeText(this, "등록된 날인 문서가 없어서 날인을 완료할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
@@ -312,7 +392,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
 
         httpAsyncRequest.AddHeaderData("cont_idx", contIdx);
         httpAsyncRequest.AddHeaderData("stamp_idx", mac);
-        httpAsyncRequest.AddHeaderData("status", status);
+        httpAsyncRequest.AddHeaderData("status", stampStatus);
         httpAsyncRequest.AddHeaderData("addr", getCurrentAddress(latitude, longitude));
         httpAsyncRequest.RequestHttpPostData(String.format(HTTP_DEFINE.HTTP_URL_STAMP, sessionManager.getMemIdx()), sessionManager.getAuthKey(), 8);
     }
@@ -419,7 +499,25 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
 
         if (jsonService != null) {
             Toast.makeText(this, "날인이 완료됐습니다.", Toast.LENGTH_SHORT).show();
-            finish();
+            if ("open".equals(stampStatus)) {
+                stampStatus = "close";
+                mBleService.sendClose();
+                mBleService.sendOff();
+                requestHttpDataStamp();
+                loading();
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                loadingEnd();
+                                finish();
+                            }
+                        },
+                        MIN_CLOSE_INTERVAL
+                );
+            } else {
+                finish();
+            }
         }
     }
     // 인장 사용 가능 체크 - 7
@@ -430,13 +528,24 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
             mac = jsonService.GetString("stamp_idx", null);
 
             if (isService) {
-                if ("open".equals(status)) {
+                if ("open".equals(buttonType)) {
+                    stampStatus = "open";
                     mBleService.sendOpen();
-                } else if ("close".equals(status)) {
+                    requestHttpDataStamp();
+                    loading();
+                    new java.util.Timer().schedule(
+                            new java.util.TimerTask() {
+                                @Override
+                                public void run() {
+                                    loadingEnd();
+                                    startSign.setText("인장 닫기");
+                                }
+                            },
+                            MIN_OPEN_INTERVAL
+                    );
+                } else if ("close".equals(buttonType)) {
                     DisplayDialog_Doc_Com();
                 }
-
-                requestHttpDataStamp();
             } else {
                 Intent IntentInstance = new Intent(this, ConnectActivity.class);
                 IntentInstance.putExtra("mac", mac);

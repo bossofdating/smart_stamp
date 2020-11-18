@@ -77,7 +77,7 @@ public class FragmentMainSetting extends Fragment {
 		textviewAppversion.setText("Version " + getVersionInfo(getContext()));
 	}
 
-	/**************************************** 레이아웃 출력 *******************************************/
+	/**************************************** 버전 *******************************************/
 	public String getVersionInfo(Context context){
 		String version = null;
 		try {

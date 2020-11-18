@@ -142,7 +142,9 @@ public class BleService extends Service {
         mThread.interrupt();
 
         if( mBluetoothGatt != null) {
-            if( mBluetoothGatt.connect()) mBluetoothGatt.disconnect();
+            if( mBluetoothGatt.connect()) {
+                mBluetoothGatt.disconnect();
+            }
             mBluetoothGatt.close();
             mBluetoothGatt = null;
         }
@@ -156,7 +158,6 @@ public class BleService extends Service {
         AppVariables.device = null;
 
         this.unregisterReceiver(mBluetoothStateReceiver);
-
         myLog("onDestroy");
     }
 

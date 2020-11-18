@@ -160,19 +160,6 @@ public class CommonUtil {
 		return true;
 	}
 
-	public static String GetSHA256Hash( String OriginalString ) {
-		String HashResult = null;
-		try {
-			MessageDigest DigestInstance = MessageDigest.getInstance( "SHA256" );
-			DigestInstance.update( OriginalString.getBytes() );
-			HashResult = new BigInteger( 1, DigestInstance.digest() ).toString( 16 );
-		}
-		catch( NoSuchAlgorithmException e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
-		}
-		return HashResult;
-	}
-
 	public static Dialog GetCustomProgressDialog( Activity ActivityInstance ) {
 		if( ActivityInstance == null ) return null;
 		else {

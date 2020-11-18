@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.kt.SmartStamp.R;
@@ -30,6 +31,7 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
 
         requiredPermissionsManager = new RequiredPermissionsManager(this);
 
@@ -51,7 +53,7 @@ public class SplashActivity extends Activity {
                     ignored.printStackTrace();
                 }
             }
-        }, 1500);
+        }, 2000);
     }
 
     /********************************* 권한요청 결과 이벤트 핸들러 ***********************************/

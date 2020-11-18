@@ -1,5 +1,6 @@
 package com.kt.SmartStamp.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -8,8 +9,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.BuildConfig;
@@ -18,14 +21,19 @@ import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
 import com.kt.SmartStamp.listener.HTTP_RESULT_LISTENER;
 import com.kt.SmartStamp.service.SessionManager;
+import com.kt.SmartStamp.utility.AES256Util;
 import com.kt.SmartStamp.utility.HTTP_ASYNC_REQUEST;
 import com.kt.SmartStamp.utility.JSONService;
+
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, HTTP_RESULT_LISTENER {
     public static HTTP_ASYNC_REQUEST httpAsyncRequest;
     private SessionManager sessionManager;
     private JSONService jsonService;
     private PackageInfo packageInfo;
+    private AES256Util aES256Util;
 
     private static final long MIN_CLICK_INTERVAL = 1000;
     private long mLastClickTime;
@@ -33,10 +41,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private EditText idEditText;
     private EditText pwEditText;
+    private TextView textviewAppversion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
         setContentView(R.layout.activity_login);
         httpAsyncRequest = new HTTP_ASYNC_REQUEST(this, COMMON_DEFINE.REST_API_AUTHORIZE_KEY_NAME, this);
         sessionManager = new SessionManager(this);
@@ -51,11 +61,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         idEditText = findViewById(R.id.id_edittext);
         pwEditText = findViewById(R.id.pw_edittext);
         loginButton = findViewById(R.id.login_button);
+        textviewAppversion = findViewById(R.id.textview_appversion);
+
         loginButton.setOnClickListener(this);
+
+        textviewAppversion.setText("Version " + getVersionInfo(this));
 
         // 자동 로그인 (개발완료 후 제거)
         //requestHttpDataLogin("admin", "admin", "1.0");
-        requestHttpDataLogin("82047551", "new1234!", "1.0");
+        //requestHttpDataLogin("82047551", "new1234!", "1.0");
+        //requestHttpDataLogin("82047551", "C+rMAE1YCyDe/XWR+LFzdQ==", "1.0");
+
     }
 
     /*************************************** 클릭 이벤트 핸들러 ***************************************/
@@ -73,6 +89,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_button :
                 String id = idEditText.getText().toString();
                 String pw = pwEditText.getText().toString();
+
+                try {
+                    aES256Util = new AES256Util();
+                    pw = aES256Util.encrypt(pw);
+                } catch (UnsupportedEncodingException e){
+                } catch (GeneralSecurityException e){}
 
                 if (id == null || "".equals(id)) {
                     Toast.makeText(this, "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -130,6 +152,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else if ("n".equals(agreeFl)) startActivity(new Intent(LoginActivity.this, TermsActivity.class));
             }
         }
+    }
+
+    /**************************************** 버전 *******************************************/
+    public String getVersionInfo(Context context){
+        String version = null;
+        try {
+            PackageInfo i = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            version = i.versionName;
+        } catch(PackageManager.NameNotFoundException e) { }
+        return version;
     }
 
 }

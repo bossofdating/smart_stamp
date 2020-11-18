@@ -86,4 +86,12 @@
         android:textColor="@color/colorPrimary"
         android:textStyle="bold" />
 
+    <TextView
+        android:id="@+id/textview_appversion"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:textSize="15dp"
+        android:textColor="@color/commonTextDefault"/>
+
 </LinearLayout>

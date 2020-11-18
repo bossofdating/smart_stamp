@@ -7,6 +7,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
         setContentView(R.layout.activity_agree);
         httpAsyncRequest = new HTTP_ASYNC_REQUEST(this,COMMON_DEFINE.REST_API_AUTHORIZE_KEY_NAME, this);
         sessionManager = new SessionManager(this);
