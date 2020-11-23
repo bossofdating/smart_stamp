@@ -346,8 +346,8 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
                         CURRENT_SELECTING_PROFILE_PHOTO_PATH = data.getStringExtra( ActivityImageSelector.INTENT_DATA_SELECTED_IMAGE_PATH );
                         CropImage.ActivityBuilder CropImageBuilder = CropImage.activity( Uri.fromFile( new File( CURRENT_SELECTING_PROFILE_PHOTO_PATH ) ) );
                         CropImageBuilder.setAspectRatio(3, 4);
-                        CropImageBuilder.setAllowRotation( false );
-                        CropImageBuilder.setAllowFlipping( false );
+                        CropImageBuilder.setAllowRotation(true);
+                        CropImageBuilder.setAllowFlipping(false);
                         CropImageBuilder.setCropMenuCropButtonIcon(R.drawable.common_icon_done_whte);
                         CropImageBuilder.start(this);
                     }
