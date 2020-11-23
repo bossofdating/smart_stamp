@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.NestedScrollView;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.activity.DetailReadyActivity;
+import com.kt.SmartStamp.activity.MainActivity;
 import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainDashboard;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
@@ -35,7 +37,7 @@ import com.kt.SmartStamp.utility.JSONService;
 
 import java.util.ArrayList;
 
-public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
+public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER, View.OnClickListener {
 	public static HTTP_ASYNC_REQUEST httpAsyncRequest;
 	public static SessionManager sessionManager;
 	private JSONService jsonService;
@@ -44,6 +46,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 
 	public static final int ANIMATION_DELAY_TIME = 100;
 	private static final long MIN_CLICK_INTERVAL = 1000;
+	private static final long MIN_BTN_CLICK_INTERVAL = 3000;
 	private long mLastClickTime;
 	private int offset = 0;
 
@@ -52,6 +55,8 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	private LinearLayout dashboardLinearLayout;
 	private TextView utnameTextView;
 	private TextView nameTextView;
+	private LinearLayout contRCntLinearLayout;
+	private LinearLayout contYCntLinearLayout;
 	private TextView contCntTextView;
 	private TextView contNCntTextView;
 	private TextView contRCntTextView;
@@ -93,12 +98,17 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 		dashboardLinearLayout = FragmentView.findViewById(R.id.dashboard_linearlayout);
 		/*utnameTextView = FragmentView.findViewById(R.id.utname_textview);
 		nameTextView = FragmentView.findViewById(R.id.name_textview);*/
+		contRCntLinearLayout = FragmentView.findViewById(R.id.cont_r_cnt_linearlayout);
+		contYCntLinearLayout = FragmentView.findViewById(R.id.cont_y_cnt_linearlayout);
 		contCntTextView = FragmentView.findViewById(R.id.cont_cnt_textview);
 		contNCntTextView = FragmentView.findViewById(R.id.cont_n_cnt_textview);
 		contRCntTextView = FragmentView.findViewById(R.id.cont_r_cnt_textview);
 		contYCntTextView = FragmentView.findViewById(R.id.cont_y_cnt_textview);
 		nodataTextview = FragmentView.findViewById(R.id.nodata_textview);
 		contractListRelativelayout = FragmentView.findViewById(R.id.contract_list_relativelayout);
+
+		contRCntLinearLayout.setOnClickListener(this);
+		contYCntLinearLayout.setOnClickListener(this);
 
 		dashboardNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
@@ -138,14 +148,35 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 	@Override
 	public void onReachedLastItem(Object callerObject) {}
 
+	/************************************** 클릭 이벤트 핸들러 ****************************************/
+	@Override
+	public void onClick(View view) {
+		// 중복 클릭 방지
+		long currentClickTime= SystemClock.uptimeMillis();
+		long elapsedTime=currentClickTime-mLastClickTime;
+		if(elapsedTime<=MIN_BTN_CLICK_INTERVAL){
+			return;
+		}
+		mLastClickTime=currentClickTime;
+
+		switch(view.getId()) {
+			case R.id.cont_r_cnt_linearlayout :
+				((MainActivity) getActivity()).navView.setSelectedItemId(R.id.navigation_list);
+				break;
+			case R.id.cont_y_cnt_linearlayout :
+				((MainActivity) getActivity()).navView.setSelectedItemId(R.id.navigation_complete_list);
+				break;
+		}
+	}
+
 	/************************************ 액티비티 실행 결과 수신 *************************************/
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch(requestCode) {
 			case 0:
 				offset = 0;
-				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				ft.detach(this).attach(this).commit();
+				FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+				fragmentTransaction.detach(this).attach(this).commit();
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}

@@ -130,6 +130,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/cont_r_cnt_linearlayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
@@ -151,6 +152,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/cont_y_cnt_linearlayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
