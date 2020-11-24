@@ -222,7 +222,7 @@ public class FragmentMainAdmin extends Fragment implements HTTP_RESULT_LISTENER,
 						}
 					}
 				}
-				break;
+			break;
 		}
 	}
 
@@ -238,10 +238,25 @@ public class FragmentMainAdmin extends Fragment implements HTTP_RESULT_LISTENER,
 					}
 					break;
 				case 2:
+					progressDialog.setIndeterminate(true);
+					progressDialog.setCancelable(false);
+					progressDialog.show();
+					progressDialog.setMessage("연결중...");
+
 					if (AppVariables.isRunServiceMainView) {
 						mac = data.getStringExtra("mac");
 						setStartService();
 					}
+
+					new java.util.Timer().schedule(
+							new java.util.TimerTask() {
+								@Override
+								public void run() {
+									progressDialog.dismiss();
+								}
+							},
+							2000
+					);
 			}
 		} catch( Exception e ) {
 			if(BuildConfig.DEBUG) e.printStackTrace();
