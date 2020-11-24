@@ -69,9 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // 자동 로그인 (개발완료 후 제거)
         //requestHttpDataLogin("admin", "admin", "1.0");
-        //requestHttpDataLogin("82047551", "new1234!", "1.0");
         //requestHttpDataLogin("82047551", "C+rMAE1YCyDe/XWR+LFzdQ==", "1.0");
-
     }
 
     /*************************************** 클릭 이벤트 핸들러 ***************************************/
@@ -135,12 +133,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String loginFlag = jsonService.GetString( "Status", null );
             String authKey = jsonService.GetString( "auth_key", null );
             String memIdx = jsonService.GetString( "mem_idx", null );
+            String adminFl = jsonService.GetString( "admin_fl", null );
             String agreeFl = jsonService.GetString( "agree_fl", null );
             String memName = jsonService.GetString( "name", null );
             String utName = jsonService.GetString( "ut_name", null );
 
             sessionManager.setAuthKey(authKey);
             sessionManager.setMemIdx(memIdx);
+            sessionManager.setAdminFl(adminFl);
             sessionManager.setMemName(memName);
             sessionManager.setUtName(utName);
 

@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_complete_list_black_24dp"
         android:title="" />
 
+    <item
+        android:id="@+id/navigation_admin"
+        android:icon="@drawable/ic_key_black_24dp"
+        android:title=""/>
+
 </menu>

@@ -41,6 +41,7 @@ public class AppVariables {
     public static String User_Email ="";
     public static String User_Team ="";
     public static String Mac_Adress ="";
+    public static String Device_Name ="";
     public static String User_Hp_Token="";
     public static String User_Idx ="";
     public static String User_Permission ="N";

@@ -25,11 +25,10 @@ import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.data.AppVariables;
-import com.kt.SmartStamp.service.BleService;
 
 import java.util.List;
 
-public class ConnectActivity extends AppCompatActivity {
+public class ConnectAdminActivity extends AppCompatActivity {
     private BluetoothAdapter mBluetoothAdapter = null;
     private boolean mScanning;
     private Handler mHandler;
@@ -45,11 +44,10 @@ public class ConnectActivity extends AppCompatActivity {
     private final int PERMISSION_REQ_CODE = 225;
 
     private TextView txtInfo = null;
-    private String sMacAddress = "";
+    private String deviceName = "";
     public static final int ANIMATION_DELAY_TIME = 500;
     private Animation buttonAnimation;
-
-    private String mac = "";
+    public String mac = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +65,6 @@ public class ConnectActivity extends AppCompatActivity {
         txtInfo.setText("인장을 찾을 수 없습니다.");
 
         Intent IntentInstance = getIntent();
-        mac = IntentInstance.getStringExtra("mac");
 
         if(IsPermision() == true) {
             mHandler = new Handler();
@@ -81,9 +78,12 @@ public class ConnectActivity extends AppCompatActivity {
         btnGoToMain.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View view){
-                if (checkMacAddress()) {
+                if (checkDeviceName()) {
                     stopScan();
                     AppVariables.isRunServiceMainView = true;
+                    Intent intent = new Intent();
+                    intent.putExtra("mac", mac);
+                    setResult(RESULT_OK, intent);
                     finish();
                 }
             }
@@ -107,18 +107,16 @@ public class ConnectActivity extends AppCompatActivity {
         scanLeDevice(true);
     }
 
-    private boolean checkMacAddress(){
+    private boolean checkDeviceName(){
         boolean bResult = false;
-        if(AppVariables.Mac_Adress.isEmpty() && ! sMacAddress.isEmpty()){
-            //처음 스캔해서 Mac 을 가져왔을 경우
-            AppVariables.Mac_Adress = sMacAddress;
+        if(AppVariables.Device_Name.isEmpty() && ! deviceName.isEmpty()){
+            AppVariables.Device_Name = deviceName;
         }
-        if(!AppVariables.Mac_Adress.equals(sMacAddress) && !sMacAddress.isEmpty()){
-            //장비가 바뀐경우
-            AppVariables.Mac_Adress = sMacAddress;
+        if(!AppVariables.Device_Name.equals(deviceName) && !deviceName.isEmpty()){
+            AppVariables.Device_Name = deviceName;
         }
 
-        Log.i("---------->",AppVariables.Mac_Adress);
+        Log.i("---------->",AppVariables.Device_Name);
 
         if(AppVariables.device !=null) bResult = true;
         return bResult;
@@ -193,14 +191,14 @@ public class ConnectActivity extends AppCompatActivity {
 
     private void scanProcess(BluetoothDevice device) {
         if(device == null) return;
-        String deviceMac = device.getAddress();
-        if(deviceMac == null) return;
+        String deviceName= device.getName();
+        if(deviceName == null) return;
 
-        if (deviceMac.trim().equals(mac)) {
-            Log.d("mac Adress==",device.getAddress());
+        if (deviceName.trim().equals("SMART STAMP")) {
+            Log.d("device name==",device.getName());
             AppVariables.device = device;
-            sMacAddress = device.getAddress();
-            txtInfo.setText(device.getAddress());
+            mac = device.getAddress();
+            txtInfo.setText(mac);
             stopScan();
         }
 

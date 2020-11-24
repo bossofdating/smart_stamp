@@ -178,6 +178,12 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if ("open".equals(stampStatus)) {
+            stampStatus = "close";
+            requestHttpDataStamp();
+        }
+
         AppVariables.device = null;
         if (mBleService != null) {
             setUnbindService();
