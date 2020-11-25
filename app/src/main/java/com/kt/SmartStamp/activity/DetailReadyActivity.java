@@ -332,6 +332,8 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
 
         if(jsonService != null) {
             Toast.makeText(this, "문서 등록이 완료됐습니다.", Toast.LENGTH_SHORT).show();
+            ((MainActivity)MainActivity.mContext).displayFragment(1);
+            ((MainActivity)MainActivity.mContext).navView.setSelectedItemId(R.id.navigation_list);
             finish();
         }
     }

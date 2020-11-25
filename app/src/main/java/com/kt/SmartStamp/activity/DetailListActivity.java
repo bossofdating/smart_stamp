@@ -74,6 +74,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
     private long mLastClickTime;
     private int offset = 0;
     private int doc_after_cnt = 0;
+    private int doc_before_cnt = 0;
 
     public static GridViewAdapterDocList GVADoc;
 
@@ -320,9 +321,9 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                     startActivityForResult(intentBthEnable,BT_REQUEST_ENABLE);
                 } else {
                     buttonType = "close";
-                    if (doc_after_cnt > 0) {
+                    if (doc_after_cnt == doc_before_cnt) {
                         requestHttpDataStampCheck();
-                    } else Toast.makeText(this, "등록된 날인 문서가 없어서 날인을 완료할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    } else Toast.makeText(this, "모든 날인문서를 등록해야 날인 완료가 가능합니다.", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -432,6 +433,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
             contDetailTextView.setText(jsonService.GetString("cont_detail", null));
 
             doc_after_cnt = Integer.parseInt(jsonService.GetString("doc_after_cnt", null));
+            doc_before_cnt = Integer.parseInt(jsonService.GetString("doc_before_cnt", null));
             if (doc_after_cnt > 0) {
                 contStateTextView.setText("날인중 (" + jsonService.GetString("doc_after_cnt", null) + "/"
                         + jsonService.GetString("doc_before_cnt", null) +  ")");
@@ -526,6 +528,9 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
             } else {
                 finish();
             }
+
+            ((MainActivity)MainActivity.mContext).displayFragment(2);
+            ((MainActivity)MainActivity.mContext).navView.setSelectedItemId(R.id.navigation_complete_list);
         }
     }
     // 인장 사용 가능 체크 - 7

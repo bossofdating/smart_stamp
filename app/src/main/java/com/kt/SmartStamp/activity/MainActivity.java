@@ -1,5 +1,6 @@
 package com.kt.SmartStamp.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.design.widget.BottomNavigationView;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int FRAGMENT_ADMIN = 3;
 
     private long PREVIOUS_BACK_KEY_PRESSED_TIME;
+
+    public static Context mContext;
 
     public BottomNavigationView navView;
 
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags( WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE );
         setContentView(R.layout.activity_main);
+
+        mContext = this;
 
         titleTextView = findViewById(R.id.title_textview);
 
