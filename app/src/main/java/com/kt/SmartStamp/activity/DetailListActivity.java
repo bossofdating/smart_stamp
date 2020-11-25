@@ -122,6 +122,8 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         sessionManager = new SessionManager(this);
         jsonService = new JSONService();
         mContext = this;
+
+        AppVariables.isRunServiceMainView = false;
         progressDialog = new ProgressDialog(DetailListActivity.this);
 
         SELECTED_PROFILE_PHOTO_LIST = new ArrayList<>();
@@ -666,24 +668,24 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                     }
                     break;
                 case 2:
-                    progressDialog.setIndeterminate(true);
-                    progressDialog.setCancelable(false);
-                    progressDialog.show();
-                    progressDialog.setMessage("연결중...");
-
                     if (AppVariables.isRunServiceMainView) {
-                        setStartService();
-                    }
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
+                        progressDialog.setMessage("연결중...");
 
-                    new java.util.Timer().schedule(
-                            new java.util.TimerTask() {
-                                @Override
-                                public void run() {
-                                    progressDialog.dismiss();
-                                }
-                            },
-                            2000
-                    );
+                        setStartService();
+
+                        new java.util.Timer().schedule(
+                                new java.util.TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        progressDialog.dismiss();
+                                    }
+                                },
+                                2000
+                        );
+                    }
             }
         } catch( Exception e ) {
             if(BuildConfig.DEBUG) e.printStackTrace();

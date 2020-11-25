@@ -135,7 +135,7 @@ public class RecyclerViewAdapterMainList extends RecyclerView.Adapter<RecyclerVi
 		}
 	}
 
-	// 권한 동의 안내 다이얼로그
+	// 반출기간 열람 안내
 	private void DisplayDialog_Open_Guide() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogStyle);
 		builder.setTitle("안내");
