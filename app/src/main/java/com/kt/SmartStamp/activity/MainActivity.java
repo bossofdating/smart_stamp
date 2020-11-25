@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 fragment = new FragmentMainCompleteList();
                 break;
             case FRAGMENT_ADMIN :
-                titleTextView.setText("관리자");
+                titleTextView.setText("인장 관리자");
                 fragment = new FragmentMainAdmin();
                 break;
         }

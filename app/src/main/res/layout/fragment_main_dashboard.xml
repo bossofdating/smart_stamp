@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/dashboard_linearlayout"
     android:visibility="gone">
@@ -115,16 +115,16 @@
                             android:orientation="horizontal"
                             android:layout_weight="1">
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_dashboard_gray_24dp"/>-->
-                            <TextView
+                                android:src="@drawable/ic_dashboard_gray_24dp"/>
+                            <!--<TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="12dp"
                                 android:text="등록\n대기"
-                                android:textColor="@color/Common_StatusBar_Gray" />
+                                android:textColor="@color/Common_StatusBar_Gray" />-->
 
                             <TextView
                                 android:id="@+id/cont_n_cnt_textview"
@@ -144,17 +144,17 @@
                             android:orientation="horizontal"
                             android:layout_weight="1">
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_list_orange_24dp"/>-->
+                                android:src="@drawable/ic_list_orange_24dp"/>
 
-                            <TextView
+                            <!--<TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="12dp"
                                 android:text="날인\n대기"
-                                android:textColor="@color/orange_700" />
+                                android:textColor="@color/orange_700" />-->
 
                             <TextView
                                 android:id="@+id/cont_r_cnt_textview"
@@ -174,17 +174,17 @@
                             android:orientation="horizontal"
                             android:layout_weight="1">
 
-                            <!--<ImageView
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_complete_list_blue_24dp"/>-->
+                                android:src="@drawable/ic_complete_list_blue_24dp"/>
 
-                            <TextView
+                            <!--<TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="12dp"
                                 android:text="날인\n완료"
-                                android:textColor="@color/colorBlue" />
+                                android:textColor="@color/colorBlue" />-->
 
                             <TextView
                                 android:id="@+id/cont_y_cnt_textview"

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kt.SmartStamp.R;
+import com.kt.SmartStamp.activity.MainActivity;
 import com.kt.SmartStamp.adapter.RecyclerViewAdapterMainCompleteList;
 import com.kt.SmartStamp.data.ServerDataContract;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
@@ -34,7 +35,7 @@ import com.kt.SmartStamp.utility.JSONService;
 
 import java.util.ArrayList;
 
-public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER {
+public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LISTENER, LIST_ITEM_LISTENER, View.OnClickListener {
 	public static HTTP_ASYNC_REQUEST httpAsyncRequest;
 	public static SessionManager sessionManager;
 	private JSONService jsonService;
@@ -43,13 +44,19 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 
 	public static final int ANIMATION_DELAY_TIME = 100;
 	private static final long MIN_CLICK_INTERVAL = 1000;
+	private static final long MIN_BTN_CLICK_INTERVAL = 3000;
 	private long mLastClickTime;
 	private int offset = 0;
 
 	private NestedScrollView completeListNestedscrollview;
 	private RecyclerView recyclerViewMainCompleteList;
 	private LinearLayout completeListLinearLayout;
+	private LinearLayout contNCntLinearLayout;
+	private LinearLayout contRCntLinearLayout;
 	private TextView contCntTextView;
+	private TextView contNCntTextView;
+	private TextView contRCntTextView;
+	private TextView contYCntTextView;
 	private TextView nodataTextview;
 	private RelativeLayout contractListRelativelayout;
 
@@ -85,9 +92,17 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 		completeListNestedscrollview = FragmentView.findViewById(R.id.complete_list_nestedscrollview);
 		recyclerViewMainCompleteList = FragmentView.findViewById(R.id.contract_list_recyclerview);
 		completeListLinearLayout = FragmentView.findViewById(R.id.complete_list_linearlayout);
+		contNCntLinearLayout = FragmentView.findViewById(R.id.cont_n_cnt_linearlayout);
+		contRCntLinearLayout = FragmentView.findViewById(R.id.cont_r_cnt_linearlayout);
 		contCntTextView = FragmentView.findViewById(R.id.cont_cnt_textview);
+		contNCntTextView = FragmentView.findViewById(R.id.cont_n_cnt_textview);
+		contRCntTextView = FragmentView.findViewById(R.id.cont_r_cnt_textview);
+		contYCntTextView = FragmentView.findViewById(R.id.cont_y_cnt_textview);
 		nodataTextview = FragmentView.findViewById(R.id.nodata_textview);
 		contractListRelativelayout = FragmentView.findViewById(R.id.contract_list_relativelayout);
+
+		contNCntLinearLayout.setOnClickListener(this);
+		contRCntLinearLayout.setOnClickListener(this);
 
 		completeListNestedscrollview.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 			@Override
@@ -139,6 +154,27 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 		completeListLinearLayout.setVisibility(View.VISIBLE);
 	}
 
+	/************************************** 클릭 이벤트 핸들러 ****************************************/
+	@Override
+	public void onClick(View view) {
+		// 중복 클릭 방지
+		long currentClickTime= SystemClock.uptimeMillis();
+		long elapsedTime=currentClickTime-mLastClickTime;
+		if(elapsedTime<=MIN_BTN_CLICK_INTERVAL){
+			return;
+		}
+		mLastClickTime=currentClickTime;
+
+		switch(view.getId()) {
+			case R.id.cont_n_cnt_linearlayout :
+				((MainActivity) getActivity()).navView.setSelectedItemId(R.id.navigation_dashboard);
+				break;
+			case R.id.cont_r_cnt_linearlayout :
+				((MainActivity) getActivity()).navView.setSelectedItemId(R.id.navigation_list);
+				break;
+		}
+	}
+
 	/************************************* HTTP  데이터요청 ******************************************/
 	// 계약 상태별 카운트 - 1
 	public static void requestHttpDataContCnt() {
@@ -164,7 +200,9 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 		jsonService.CreateJSONObject(jsonData);
 
 		if(jsonService != null) {
-			String contYCnt = jsonService.GetString( "cont_y_cnt", null );
+			String contNCnt = jsonService.GetString("cont_n_cnt", null);
+			String contRCnt = jsonService.GetString("cont_r_cnt", null);
+			String contYCnt = jsonService.GetString("cont_y_cnt", null);
 
 			if (Integer.parseInt(contYCnt) > 0) {
 				nodataTextview.setVisibility(View.GONE);
@@ -175,7 +213,10 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 				nodataTextview.setVisibility(View.VISIBLE);
 			}
 
-			contCntTextView.setText(contYCnt + "건");
+			contCntTextView.setText(contNCnt + "건");
+			contNCntTextView.setText(contNCnt + "건");
+			contRCntTextView.setText(contRCnt + "건");
+			contYCntTextView.setText(contYCnt + "건");
 		}
 
 		requestHttpDataContNList(offset);
