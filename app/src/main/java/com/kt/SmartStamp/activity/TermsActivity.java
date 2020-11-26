@@ -35,9 +35,9 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
     private long mLastClickTime;
 
     private CheckBox chkAgree01;
-    private CheckBox chkAgree02;
+    /*private CheckBox chkAgree02;*/
     private TextView txtAgree01;
-    private TextView txtAgree02;
+    /*private TextView txtAgree02;*/
     private Button btnAgree;
 
     @Override
@@ -51,9 +51,9 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
         termsArrayList = new ArrayList<>();
 
         chkAgree01 = findViewById(R.id.chkAgree01);
-        chkAgree02 = findViewById(R.id.chkAgree02);
+        //chkAgree02 = findViewById(R.id.chkAgree02);
         txtAgree01 = findViewById(R.id.txtAgree01);
-        txtAgree02 = findViewById(R.id.txtAgree02);
+        //txtAgree02 = findViewById(R.id.txtAgree02);
         btnAgree = findViewById(R.id.btnAgree);
 
         displayLayout();
@@ -95,13 +95,13 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
             }
 
             chkAgree01.setText(termsArrayList.get(0).terms_title);
-            chkAgree02.setText(termsArrayList.get(1).terms_title);
+            //chkAgree02.setText(termsArrayList.get(1).terms_title);
             txtAgree01.setText(termsArrayList.get(0).terms_text);
-            txtAgree02.setText(termsArrayList.get(1).terms_text);
+            //txtAgree02.setText(termsArrayList.get(1).terms_text);
         }
 
         txtAgree01.setMovementMethod(new ScrollingMovementMethod());
-        txtAgree02.setMovementMethod(new ScrollingMovementMethod());
+        //txtAgree02.setMovementMethod(new ScrollingMovementMethod());
 
         btnAgree.setOnClickListener(new Button.OnClickListener(){
             @Override
@@ -114,7 +114,7 @@ public class TermsActivity extends AppCompatActivity implements HTTP_RESULT_LIST
                 }
                 mLastClickTime=currentClickTime;
 
-                if(!chkAgree01.isChecked() || !chkAgree02.isChecked()){
+                if(!chkAgree01.isChecked()/* || !chkAgree02.isChecked()*/){
                     Toast.makeText(TermsActivity.this, "모든 약관에 동의해주세요", Toast.LENGTH_LONG).show();
                     return;
                 } else {

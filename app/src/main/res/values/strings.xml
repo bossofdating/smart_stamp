@@ -1,23 +1,8 @@
 <resources>
     <string name="app_name">S-Stamp</string>
-    <string name="app_service">S-Stamp 서비스가 실행중입니다.</string>
 
     <string name="agree_title">개인정보 및 위치제공에 대한 안내를 끝까지 읽고 동의해주세요</string>
     <string name="agree_chk_01">개인정보 수집·이용 동의</string>
-    <string name="agree_chk_02">개인정보 제3자 제공 동의</string>
     <string name="agree_btn">동의함</string>
-    <string name="agree_text_01"> 회사는 "S-Marker 서비스"에 관련하여 아래 개인정보를 수집·이용합니다.\n
-1. 수집·이용 목적 : 서비스 운용, 근로자 안전환경 증진, 긴급상황 알림, 안전작업제공자료로 활용\n
-2. 수집·이용 항목 : 인적사항(소속/이름/연락처), 턱끈 모듈 착용 정보(착용 상태, 착용 횟수, 착용 시간), 스마트폰 GPS 위치 정보\n
-3. 보유 및 이용기간 : 서비스 운용기간\n
-* 이용자는 동의를 거부할 권리가 있으며, 다만 동의하지 않을 경우 근로자 안전환경 증진을 위한 S-Marker 서비스 이용이 불가합니다.
-</string>
-    <string name="agree_text_02">"S-Marker 서비스"에 관련하여 회사는 아래와 같이 개인정보를 제3자에게 제공합니다.\n
-1. 개인정보를 제공받는 자 : 안전관리자 또는 권한을 부여받은 자\n
-2. 개인정보를 제공받는 자의 이용목적 : 서비스 운용, 근로자 안전환경 증진, 긴급상황 알림, 안전작업제공자료로 활용\n
-3. 제공하는 개인정보의 항목 : 인적사항(소속/이름/연락처), 턱끈 모듈 착용 정보(착용 상태, 착용 횟수, 착용 시간), 스마트폰 GPS 위치 정보\n
-4. 개인정보를 제공받는 자의 개인정보 보유 및 이용기간 : 서비스 운용기간\n
-* 이용자는 동의를 거부할 권리가 있으며, 다만 동의하지 않을 경우 근로자 안전환경 증진을 위한 S-Marker 서비스 이용이 불가합니다.</string>
-
     <string name="network_error">네트워크에 문제가 발생했습니다. 잠시 후 이용해주세요.</string>
 </resources>
