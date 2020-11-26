@@ -633,7 +633,9 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                     imageviewBattery.setImageResource(R.drawable.ic_50per);
                 } else {
                     imageviewBattery.setImageResource(R.drawable.ic_25per);
+                    if (battery <= 10) DisplayDialog_Low_Battery();
                 }
+
                 textviewBattery.setVisibility(View.VISIBLE);
                 textviewBattery.setText(Integer.toString(battery) + "%");
             }
@@ -735,6 +737,22 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
         TextView textView = theAlertDialog.findViewById(android.R.id.message);
         textView.setTextSize(15.0f);
     }
+
+    private void DisplayDialog_Low_Battery() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogStyle);
+        builder.setTitle("배터리 부족 안내");
+        builder.setMessage("배터리가 부족합니다. 배터리를 교체해주세요.");
+        builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog theAlertDialog = builder.create();
+        theAlertDialog.show();
+        TextView textView = theAlertDialog.findViewById(android.R.id.message);
+        textView.setTextSize(15.0f);
+    }
+
     // GPS 사용
     public static void showDialogForLocationServiceSetting(String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext, R.style.DialogStyle);
