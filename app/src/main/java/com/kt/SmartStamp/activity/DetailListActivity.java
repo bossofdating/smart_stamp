@@ -637,7 +637,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                 }
 
                 textviewBattery.setVisibility(View.VISIBLE);
-                textviewBattery.setText(Integer.toString(battery) + "%");
+                textviewBattery.setText("인장 " + Integer.toString(battery) + "%");
             }
 
             mBleService.bExeThread = true;
