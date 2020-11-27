@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.fragment.FragmentMainCompleteList;
 import com.kt.SmartStamp.fragment.FragmentMainDashboard;
+import com.kt.SmartStamp.fragment.FragmentMainHistory;
 import com.kt.SmartStamp.fragment.FragmentMainList;
 import com.kt.SmartStamp.fragment.FragmentMainAdmin;
 import com.kt.SmartStamp.service.SessionManager;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int FRAGMENT_DASHBOARD = 0;
     public static final int FRAGMENT_LIST = 1;
     public static final int FRAGMENT_COMPLETE_LIST = 2;
-    public static final int FRAGMENT_ADMIN = 3;
+    public static final int FRAGMENT_APPR = 3;
+    public static final int FRAGMENT_ADMIN = 4;
 
     private long PREVIOUS_BACK_KEY_PRESSED_TIME;
 
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_complete_list:
                     displayFragment(FRAGMENT_COMPLETE_LIST);
                     return true;
+                case R.id.navigation_appr:
+                    displayFragment(FRAGMENT_APPR);
+                    return true;
                 case R.id.navigation_admin:
                     displayFragment(FRAGMENT_ADMIN);
                     return true;
@@ -76,8 +81,15 @@ public class MainActivity extends AppCompatActivity {
         displayFragment(FRAGMENT_DASHBOARD);
 
         SessionManager sessionManager = new SessionManager(this);
-        if (sessionManager.getAdminFl() != null && "y".equalsIgnoreCase(sessionManager.getAdminFl())) {
+        if (sessionManager.getAdminFl() != null && "y".equalsIgnoreCase(sessionManager.getAdminFl())
+            && sessionManager.getApprFl() != null && "n".equalsIgnoreCase(sessionManager.getApprFl())) {
             navView = findViewById(R.id.nav_view_admin);
+        } else if (sessionManager.getAdminFl() != null && "n".equalsIgnoreCase(sessionManager.getAdminFl())
+                && sessionManager.getApprFl() != null && "y".equalsIgnoreCase(sessionManager.getApprFl())) {
+            navView = findViewById(R.id.nav_view_appr);
+        } else if (sessionManager.getAdminFl() != null && "y".equalsIgnoreCase(sessionManager.getAdminFl())
+                && sessionManager.getApprFl() != null && "y".equalsIgnoreCase(sessionManager.getApprFl())) {
+            navView = findViewById(R.id.nav_view_appr_admin);
         } else {
             navView = findViewById(R.id.nav_view);
         }
@@ -107,6 +119,10 @@ public class MainActivity extends AppCompatActivity {
             case FRAGMENT_COMPLETE_LIST :
                 titleTextView.setText("날인 완료");
                 fragment = new FragmentMainCompleteList();
+                break;
+            case FRAGMENT_APPR :
+                titleTextView.setText("모니터링");
+                fragment = new FragmentMainHistory();
                 break;
             case FRAGMENT_ADMIN :
                 titleTextView.setText("인장 관리자");

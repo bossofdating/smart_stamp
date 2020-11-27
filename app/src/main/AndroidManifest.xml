@@ -64,6 +64,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name="com.kt.SmartStamp.activity.DetailHistoryActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.ActivityImageSelector"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Sub" />

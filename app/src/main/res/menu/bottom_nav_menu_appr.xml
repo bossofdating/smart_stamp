@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="등록 대기"/>
+
+    <item
+        android:id="@+id/navigation_list"
+        android:icon="@drawable/ic_list_black_24dp"
+        android:title="날인 대기"/>
+
+    <item
+        android:id="@+id/navigation_complete_list"
+        android:icon="@drawable/ic_complete_list_black_24dp"
+        android:title="날인 완료"/>
+
+    <item
+        android:id="@+id/navigation_appr"
+        android:icon="@drawable/ic_key_black_24dp"
+        android:title="모니터링"/>
+
+</menu>

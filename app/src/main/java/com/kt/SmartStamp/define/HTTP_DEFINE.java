@@ -38,6 +38,9 @@ public class HTTP_DEFINE {
 	public static String HTTP_URL_DOC_DEL_AFT = SERVER_ADDRESS + "delaftdoc/%s";
 	public static String HTTP_URL_STAMP_CHECK = SERVER_ADDRESS + "stampcheck/%s";
 	public static String HTTP_URL_STAMP = SERVER_ADDRESS + "stamp/%s";
+	public static String HTTP_URL_APPR_CONT_CNT = SERVER_ADDRESS + "apprcontractcnt/%s";
+	public static String HTTP_URL_APPR_CONT_LIST = SERVER_ADDRESS + "apprcontract/%s";
+	public static String HTTP_URL_STAMP_LOCATION = SERVER_ADDRESS + "stamplocation/%s";
 
 	public static String GetUploadImageFileName( int ImageFileType, int MemberIndex, String FileNameExtension ) {
 		String FileNamePrefix = "";

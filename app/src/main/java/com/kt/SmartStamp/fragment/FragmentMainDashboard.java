@@ -226,8 +226,7 @@ public class FragmentMainDashboard extends Fragment implements HTTP_RESULT_LISTE
 			if (Integer.parseInt(contNCnt) > 0) {
 				nodataTextview.setVisibility(View.GONE);
 				contractListRelativelayout.setVisibility(View.VISIBLE);
-			}
-			else {
+			} else {
 				contractListRelativelayout.setVisibility(View.GONE);
 				nodataTextview.setVisibility(View.VISIBLE);
 			}

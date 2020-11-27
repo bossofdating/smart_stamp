@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="45dp"
+        android:layout_marginBottom="60dp"
         android:orientation="vertical"/>
 
     <android.support.design.widget.BottomNavigationView
@@ -56,5 +56,29 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu_admin" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/nav_view_appr"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="?android:attr/windowBackground"
+        android:visibility="gone"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu_appr" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/nav_view_appr_admin"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:background="?android:attr/windowBackground"
+        android:visibility="gone"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu_appr_admin" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,6 +10,7 @@ public class SessionManager {
 	private final String KEY_NAME_AUTH_KEY = "AUTH_KEY";
 	private final String KEY_NAME_MEM_INDEX = "MEM_INDEX";
 	private final String KEY_NAME_ADMIN_FL = "ADMIN_FL";
+	private final String KEY_NAME_APPR_FL = "APPR_FL";
 	private final String KEY_NAME_MEM_NAME = "MEM_NAME";
 	private final String KEY_NAME_UT_NAME = "UT_NAME";
 	private final String KEY_NAME_CONT_N_CNT = "CONT_N_CNT";
@@ -50,6 +51,15 @@ public class SessionManager {
 
 	public String getAdminFl() {
 		return sharedPreferences.getString(KEY_NAME_ADMIN_FL, "");
+	}
+
+	public void setApprFl(String apprFl) {
+		editor.putString( KEY_NAME_APPR_FL, apprFl );
+		editor.commit();
+	}
+
+	public String getApprFl() {
+		return sharedPreferences.getString(KEY_NAME_APPR_FL, "");
 	}
 
 	public void setMemName(String memName) {

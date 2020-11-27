@@ -134,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String authKey = jsonService.GetString( "auth_key", null );
             String memIdx = jsonService.GetString( "mem_idx", null );
             String adminFl = jsonService.GetString( "admin_fl", null );
+            String apprFl = jsonService.GetString( "appr_fl", null );
             String agreeFl = jsonService.GetString( "agree_fl", null );
             String memName = jsonService.GetString( "name", null );
             String utName = jsonService.GetString( "ut_name", null );
@@ -141,6 +142,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             sessionManager.setAuthKey(authKey);
             sessionManager.setMemIdx(memIdx);
             sessionManager.setAdminFl(adminFl);
+            sessionManager.setApprFl(apprFl);
             sessionManager.setMemName(memName);
             sessionManager.setUtName(utName);
 

@@ -9,4 +9,5 @@ public class ServerDataContract {
 	public String appr_ed_dt;
 	public String doc_after_cnt;
 	public String open_fl;
+	public String com_state;
 }
