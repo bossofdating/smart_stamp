@@ -80,7 +80,6 @@ public class CommonUtil {
 			if( ScalingBitmap.hashCode() != ResizeImage.hashCode() ) ScalingBitmap.recycle();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
 		return ResizeImage;
 	}
@@ -98,7 +97,6 @@ public class CommonUtil {
 			}
 		}
 		catch( IOException e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
 
 		return RotationDegree;
@@ -122,7 +120,6 @@ public class CommonUtil {
 			if( SourceBitmapRecycle ) SourceBitmap.recycle();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			return false;
 		}
 		return true;

@@ -52,12 +52,10 @@ public class HTTP_UTIL {
 	}
 
 	public void AddHeaderData( String DataName, String DataValue ) {
-		if( BuildConfig.DEBUG ) Log.d( "DEBUG", String.format( "[HTTP Request] - %s : %s / Encode Json true", DataName, DataValue ) );
 		HeaderDataNameValue.add( new NameValuePair( DataName, DataValue ) );
 	}
 
 	public void AddHeaderData( String DataName, String DataValue, boolean NeedEncodeJson ) {
-		if( BuildConfig.DEBUG ) Log.d( "DEBUG", String.format( "[HTTP Request] - %s : %s / Encode Json %s", DataName, DataValue, NeedEncodeJson ? "true" : "false" ) );
 		HeaderDataNameValue.add( new NameValuePair( DataName, DataValue, NeedEncodeJson ) );
 	}
 
@@ -96,7 +94,6 @@ public class HTTP_UTIL {
 			InputStream_HTTPContents.close();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			HeaderDataNameValue.clear();
 			return null;
 		}
@@ -145,7 +142,6 @@ public class HTTP_UTIL {
 			InputStream_HTTPContents.close();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			String_HTTPContents = null;
 		}
 		try { RESPONSE_CODE = HTTPSURLConnectionInstance.getResponseCode(); }
@@ -208,7 +204,6 @@ public class HTTP_UTIL {
             RESPONSE_CODE = HTTPURLConnectionInstance.getResponseCode();
         }
         catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
         	HeaderDataNameValue.clear();
         	return null;
         }
@@ -275,7 +270,6 @@ public class HTTP_UTIL {
 			RESPONSE_CODE = HTTPSURLConnectionInstance.getResponseCode();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			String_HTTPContents = null;
 		}
 		try { RESPONSE_CODE = HTTPSURLConnectionInstance.getResponseCode(); }
@@ -306,7 +300,6 @@ public class HTTP_UTIL {
 			RESPONSE_CODE = HTTPURLConnectionInstance.getResponseCode();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			RESPONSE_CODE = -1;
 			InputStream_HTTPContents = null;
 		}
@@ -378,7 +371,6 @@ public class HTTP_UTIL {
 			InputStreamInstance.close();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			RESPONSE_CODE = -1;
 			String_HTTPContents = null;
 		}

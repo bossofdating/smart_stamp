@@ -50,7 +50,6 @@ public class SplashActivity extends Activity {
                     }
 
                 } catch (Exception ignored) {
-                    ignored.printStackTrace();
                 }
             }
         }, 2000);

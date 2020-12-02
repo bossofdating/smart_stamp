@@ -363,9 +363,7 @@ public class DetailReadyActivity extends AppCompatActivity implements View.OnCli
                     }
                     break;
             }
-        } catch( Exception e ) {
-            if(BuildConfig.DEBUG) e.printStackTrace();
-        }
+        } catch( Exception e ) {}
         super.onActivityResult( requestCode, resultCode, data );
     }
 

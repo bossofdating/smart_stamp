@@ -68,7 +68,6 @@ public class ListViewAdapterDialogListItem extends BaseAdapter implements View.O
 			ImageView_ItemSelected.setSelected( ArrayList_DataSrc.get( Position ).Selected );
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
 		return ConvertView;
 	}

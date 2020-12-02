@@ -47,7 +47,6 @@ public class BitmapDiskCache {
 						}
 					}
 					catch( Exception e ) {
-						if( BuildConfig.DEBUG ) e.printStackTrace();
 						try {
 							if( WriteCacheFile != null ) WriteCacheFile.close();
 							if( FileInstance.exists() ) FileInstance.delete();
@@ -97,7 +96,6 @@ public class BitmapDiskCache {
 			HashResult = new BigInteger( 1, DigestInstance.digest() ).toString( 16 );
 		}
 		catch( NoSuchAlgorithmException e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
 		return HashResult;
 	}
@@ -115,7 +113,6 @@ public class BitmapDiskCache {
 			CacheBitmap = BitmapFactory.decodeFile( ImageFilePath, BitmapOptions );
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			return null;
 		}
 		return CacheBitmap;

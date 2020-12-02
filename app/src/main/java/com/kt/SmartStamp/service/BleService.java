@@ -379,17 +379,14 @@ public class BleService extends Service {
                         Thread.sleep(10);
                         mWrite.setValue(sendData);
                         bResult = mBluetoothGatt.writeCharacteristic(mWrite);
-                    } catch (Exception e){e.printStackTrace();}
+                    } catch (Exception e){}
                     result = true;
                 }
             } else {
                 myLog("Write Data : Bluetooth gatt is not connected");
             }
         }
-        catch (Exception e) {
-            myLog("Write Data Exception : "+ e.toString());
-            e.printStackTrace();
-        }
+        catch (Exception e) { }
 
         return bResult;
     }
@@ -446,7 +443,6 @@ public class BleService extends Service {
             if(characteristic.getUuid().equals(Profile.CHARACTERISTIC_NOTI)) {
                 int battery_data = readByte[0]  ; //s & 0xff;
                 AppVariables.iBatteryAmmount = Integer.parseInt(String.format("%d", battery_data));
-                Log.d("STRIP==>", "베터리 정보 들어옴 :" + Integer.toString(AppVariables.iBatteryAmmount));
                 Intent intent = new Intent(AppVariables.EXTRA_SERVICE_DATA);
                 intent.putExtra("battery", String.format("%d", battery_data));
                 intent.putExtra("action", "battery");
@@ -457,8 +453,6 @@ public class BleService extends Service {
         catch(Exception e)
         {
             bExeThread=true;
-            myLog("STRIP UI Exception==>"+e.toString());
-            e.printStackTrace();
         }
     }*/
 

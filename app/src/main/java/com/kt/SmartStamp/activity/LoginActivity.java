@@ -55,7 +55,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try {
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
-            if( BuildConfig.DEBUG ) e.printStackTrace();
         }
 
         idEditText = findViewById(R.id.id_edittext);
@@ -66,10 +65,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton.setOnClickListener(this);
 
         textviewAppversion.setText("Version " + getVersionInfo(this));
-
-        // 자동 로그인 (개발완료 후 제거)
-        //requestHttpDataLogin("admin", "admin", "1.0");
-        //requestHttpDataLogin("82047551", "C+rMAE1YCyDe/XWR+LFzdQ==", "1.0");
     }
 
     /*************************************** 클릭 이벤트 핸들러 ***************************************/

@@ -106,7 +106,6 @@ public class ActivityImageSelector extends Activity {
 			finish();
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 		}
 		super.onActivityResult( requestCode, resultCode, data );
 	}
@@ -192,7 +191,6 @@ public class ActivityImageSelector extends Activity {
 			CommonUtil.WriteBitmapToFile( ResizedBitmap, ProcessingFilePath, IMAGE_QUALITY, true );
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			if( ResizedBitmap != null ) ResizedBitmap.recycle();
 			ProcessingFilePath = "";
 		}
@@ -207,7 +205,6 @@ public class ActivityImageSelector extends Activity {
 			ResizedBitmap = CommonUtil.GetRotateBitmap( ResizedBitmap, RotateDegree, true );
 		}
 		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
 			if( ResizedBitmap != null ) ResizedBitmap.recycle();
 			ResizedBitmap = null;
 		}

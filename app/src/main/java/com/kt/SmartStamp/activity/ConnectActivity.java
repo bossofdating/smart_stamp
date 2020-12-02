@@ -197,7 +197,6 @@ public class ConnectActivity extends AppCompatActivity {
         if(deviceMac == null) return;
 
         if (deviceMac.trim().equals(mac)) {
-            Log.d("mac Adress==",device.getAddress());
             AppVariables.device = device;
             sMacAddress = device.getAddress();
             txtInfo.setText(device.getAddress());

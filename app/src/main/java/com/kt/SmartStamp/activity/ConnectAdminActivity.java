@@ -195,7 +195,6 @@ public class ConnectAdminActivity extends AppCompatActivity {
         if(deviceName == null) return;
 
         if (deviceName.trim().equals("SMART STAMP")) {
-            Log.d("device name==",device.getName());
             AppVariables.device = device;
             mac = device.getAddress();
             txtInfo.setText(mac);

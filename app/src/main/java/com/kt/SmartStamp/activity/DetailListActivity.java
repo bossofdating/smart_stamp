@@ -694,9 +694,7 @@ public class DetailListActivity extends AppCompatActivity implements View.OnClic
                         );
                     }
             }
-        } catch( Exception e ) {
-            if(BuildConfig.DEBUG) e.printStackTrace();
-        }
+        } catch( Exception e ) {}
         super.onActivityResult( requestCode, resultCode, data );
     }
 

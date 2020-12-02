@@ -169,9 +169,7 @@ public class HTTP_ASYNC_REQUEST<T> {
 			new AsyncTask_UploadHttpPostPatchImage( HttpRequester, HttpUrl, RequestCode, null, ImagePath, ImageParameter, ServerFileName ).execute( "POST", Token );
 			HttpRequester = null;
 		}
-		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
-		}
+		catch( Exception e ) {}
 	}
 
 	public void UploadPatchImage( String HttpUrl, String Token, int RequestCode, String ImagePath, String ImageParameter, String ServerFileName ) {
@@ -180,9 +178,7 @@ public class HTTP_ASYNC_REQUEST<T> {
 			new AsyncTask_UploadHttpPostPatchImage( HttpRequester, HttpUrl, RequestCode, null, ImagePath, ImageParameter, ServerFileName ).execute( "PATCH", Token );
 			HttpRequester = null;
 		}
-		catch( Exception e ) {
-			if( BuildConfig.DEBUG ) e.printStackTrace();
-		}
+		catch( Exception e ) {}
 	}
 
 	private class AsyncTask_HttpGetPutData extends AsyncTask<String, Void, String> {
@@ -284,7 +280,6 @@ public class HTTP_ASYNC_REQUEST<T> {
 				if( BuildConfig.DEBUG ) Log.i( "DEBUG", "[HTTP Request Result]\n- URL : " + HTTP_URL + "\n- Result Data : 비트맵 수신 성공" );
 			}
 			catch( Exception e ) {
-				if( BuildConfig.DEBUG ) e.printStackTrace();
 				HttpReceivedBitmap = null;
 			}
 			return HttpReceivedBitmap;
@@ -323,7 +318,6 @@ public class HTTP_ASYNC_REQUEST<T> {
 				if( BuildConfig.DEBUG ) Log.i( "DEBUG", "[HTTP Request Result]\n- URL : " + HTTP_URL + (DownloadResult ? "\n- Result Data : 파일 수신 성공" : "\n- Result Data : 파일 수신 실패") );
 			}
 			catch( Exception e ) {
-				if( BuildConfig.DEBUG ) e.printStackTrace();
 			}
 			if( DownloadResult == false ) CommonUtil.DeleteFile( WRITE_FILE_PATH );
 			return DownloadResult;

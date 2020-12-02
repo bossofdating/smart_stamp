@@ -84,7 +84,7 @@
 
         <service android:name=".service.BleService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="false"/>
 
         <!-- 프로바이더 -->
         <provider

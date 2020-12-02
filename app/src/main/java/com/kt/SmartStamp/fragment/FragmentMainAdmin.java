@@ -259,9 +259,7 @@ public class FragmentMainAdmin extends Fragment implements HTTP_RESULT_LISTENER,
 						);
 					}
 			}
-		} catch( Exception e ) {
-			if(BuildConfig.DEBUG) e.printStackTrace();
-		}
+		} catch( Exception e ) {}
 		super.onActivityResult( requestCode, resultCode, data );
 	}
 
