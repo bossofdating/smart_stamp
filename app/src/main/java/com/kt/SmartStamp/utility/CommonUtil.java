@@ -90,10 +90,18 @@ public class CommonUtil {
 			ExifInterface Exif = new ExifInterface( BitmapFilePath );
 			int ExifOrientation = Exif.getAttributeInt( ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL );
 			switch( ExifOrientation ) {
-				case ExifInterface.ORIENTATION_ROTATE_90 : RotationDegree = 90;
-				case ExifInterface.ORIENTATION_ROTATE_180 : RotationDegree = 180;
-				case ExifInterface.ORIENTATION_ROTATE_270 : RotationDegree = 270;
-				default : RotationDegree = 0;
+				case ExifInterface.ORIENTATION_ROTATE_90 :
+					RotationDegree = 90;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_180 :
+					RotationDegree = 180;
+					break;
+				case ExifInterface.ORIENTATION_ROTATE_270 :
+					RotationDegree = 270;
+					break;
+				default :
+					RotationDegree = 0;
+					break;
 			}
 		}
 		catch( IOException e ) {
