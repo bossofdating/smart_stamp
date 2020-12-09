@@ -91,8 +91,10 @@ public class BleService extends Service {
             if (mBluetoothManager == null) {
                 myLog("Unable to initialize BluetoothManager.");
             }
+
+            mBluetoothAdapter = mBluetoothManager.getAdapter();
         }
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
+
         if (mBluetoothAdapter == null) {
             myLog("Unable to obtain a BluetoothAdapter.");
         } else {

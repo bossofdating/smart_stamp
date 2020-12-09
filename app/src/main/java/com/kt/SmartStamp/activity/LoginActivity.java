@@ -64,7 +64,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         loginButton.setOnClickListener(this);
 
-        textviewAppversion.setText("Version " + getVersionInfo(this));
+        if (getVersionInfo(this) != null)
+            textviewAppversion.setText("Version " + getVersionInfo(this));
     }
 
     /*************************************** 클릭 이벤트 핸들러 ***************************************/
