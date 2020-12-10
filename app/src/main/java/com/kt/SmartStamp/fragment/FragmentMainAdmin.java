@@ -382,7 +382,7 @@ public class FragmentMainAdmin extends Fragment implements HTTP_RESULT_LISTENER,
 					if (battery <= 10) DisplayDialog_Low_Battery();
 				}
 				textviewBattery.setVisibility(View.VISIBLE);
-				textviewBattery.setText("인장 " + Integer.toString(battery) + "%");
+				textviewBattery.setText(Integer.toString(battery) + "%");
 			}
 
 			mBleService.bExeThread = true;

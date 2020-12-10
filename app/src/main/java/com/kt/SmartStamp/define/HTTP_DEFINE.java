@@ -14,7 +14,7 @@ public class HTTP_DEFINE {
 	// AWS
 	//private static String SERVER_ADDRESS = "http://3.34.249.16/smartstampAPI/";
 	// DEV / PROD
-	private static String SERVER_ADDRESS = "http://app.iotstamp.kt.co.kr/smartstampAPI/";
+	private static String SERVER_ADDRESS = "https://app.iotstamp.kt.co.kr/smartstampAPI/";
 
 	// API URL
 	// AWS
