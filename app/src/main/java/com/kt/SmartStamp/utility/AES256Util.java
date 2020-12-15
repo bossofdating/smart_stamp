@@ -20,14 +20,11 @@ public class AES256Util {
 	/**
 	 * 16자리의 키값을 입력하여 객체를 생성한다.
 	 *
-	 * @param key
-	 *            암/복호화를 위한 키값
 	 * @throws UnsupportedEncodingException
 	 *             키값의 길이가 16이하일 경우 발생
 	 */
-	final static String key = "1234567890123456";
 
-	public AES256Util() throws UnsupportedEncodingException {
+	public AES256Util(String key) throws UnsupportedEncodingException {
 		this.iv = key.substring(0, 16);
 		byte[] keyBytes = new byte[16];
 		byte[] b = key.getBytes("UTF-8");

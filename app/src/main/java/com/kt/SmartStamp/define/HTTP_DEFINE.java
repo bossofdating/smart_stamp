@@ -23,6 +23,7 @@ public class HTTP_DEFINE {
 	public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login/dev";
 	// PROD
 	//public static String HTTP_URL_LOGIN = SERVER_ADDRESS + "login";
+	public static String HTTP_URL_KEY_INFO = SERVER_ADDRESS + "keyinfo";
     public static String HTTP_URL_TERMS_LIST = SERVER_ADDRESS + "terms";
 	public static String HTTP_URL_TERMS_AGREE = SERVER_ADDRESS + "terms/%s";
 	public static String HTTP_URL_CONT_LIST = SERVER_ADDRESS + "contract/%s";

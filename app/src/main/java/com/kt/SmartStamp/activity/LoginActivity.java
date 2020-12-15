@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,7 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kt.SmartStamp.BuildConfig;
 import com.kt.SmartStamp.R;
 import com.kt.SmartStamp.define.COMMON_DEFINE;
 import com.kt.SmartStamp.define.HTTP_DEFINE;
@@ -42,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText idEditText;
     private EditText pwEditText;
     private TextView textviewAppversion;
+    private String key = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
         }
+
+        requestHttpDataGetKey(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
         idEditText = findViewById(R.id.id_edittext);
         pwEditText = findViewById(R.id.pw_edittext);
@@ -85,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String pw = pwEditText.getText().toString();
 
                 try {
-                    aES256Util = new AES256Util();
+                    aES256Util = new AES256Util(key);
                     pw = aES256Util.encrypt(pw);
                 } catch (UnsupportedEncodingException e){
                 } catch (GeneralSecurityException e){}
@@ -95,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else if (pw == null || "".equals(pw)) {
                     Toast.makeText(this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    requestHttpDataLogin(id, pw, packageInfo.versionName);
+                    requestHttpDataLogin(id, pw, packageInfo.versionName, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                 }
 
                 break;
@@ -103,8 +106,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     /************************************* HTTP  데이터요청 ******************************************/
+    // 키 - 0
+    public static void requestHttpDataGetKey(String deviceId) {
+        httpAsyncRequest.AddHeaderData("device_id", deviceId);
+        httpAsyncRequest.RequestHttpPostData(HTTP_DEFINE.HTTP_URL_KEY_INFO, null, 0);
+    }
+
+    /************************************* HTTP  데이터요청 ******************************************/
     // 로그인 - 1
-    public static void requestHttpDataLogin(String id, String pw, String versionName) {
+    public static void requestHttpDataLogin(String id, String pw, String versionName, String deviceId) {
+        httpAsyncRequest.AddHeaderData("device_id", deviceId);
         httpAsyncRequest.AddHeaderData("id", id);
         httpAsyncRequest.AddHeaderData("pw", pw);
         httpAsyncRequest.AddHeaderData("fcm_key", "test");
@@ -116,17 +127,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onReceiveHttpResult(boolean success, String resultData, Bitmap resultBitmap, int requestCode, int httpResponseCode, Object passThroughData) {
         if(success) {
+            if(requestCode == 0) parseJsonGetKey(resultData); // 키 - 0
             if(requestCode == 1) parseJsonLogin(resultData); // 로그인 - 1
         } else Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
     }
 
     /**************************************** JsonData 변환 *******************************************/
+    // 키 - 0
+    private void parseJsonGetKey(String jsonData) {
+        jsonService.CreateJSONObject(jsonData);
+
+        if(jsonService != null) {
+            key = jsonService.GetString( "key", null );
+        }
+    }
+
     // 로그인 - 1
     private void parseJsonLogin(String jsonData) {
         jsonService.CreateJSONObject(jsonData);
 
         if(jsonService != null) {
             String loginFlag = jsonService.GetString( "Status", null );
+            String failedMessage = jsonService.GetString( "Message", null );
             String authKey = jsonService.GetString( "auth_key", null );
             String memIdx = jsonService.GetString( "mem_idx", null );
             String adminFl = jsonService.GetString( "admin_fl", null );
@@ -142,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             sessionManager.setMemName(memName);
             sessionManager.setUtName(utName);
 
-            if (loginFlag != null && "Failed".equals(loginFlag)) Toast.makeText(this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
+            if (loginFlag != null && "Failed".equals(loginFlag)) Toast.makeText(this, failedMessage, Toast.LENGTH_SHORT).show();
             else if(loginFlag != null && "Exception".equals(loginFlag)) Toast.makeText(this, getString(R.string.network_error), Toast.LENGTH_SHORT).show();
             else {
                 finish();
