@@ -212,7 +212,7 @@ public class FragmentMainCompleteList extends Fragment implements HTTP_RESULT_LI
 				nodataTextview.setVisibility(View.VISIBLE);
 			}
 
-			contCntTextView.setText(contNCnt + "건");
+			contCntTextView.setText(contYCnt + "건");
 			contNCntTextView.setText(contNCnt + "건");
 			contRCntTextView.setText(contRCnt + "건");
 			contYCntTextView.setText(contYCnt + "건");

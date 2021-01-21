@@ -225,7 +225,7 @@ public class FragmentMainList extends Fragment implements HTTP_RESULT_LISTENER, 
 				nodataTextview.setVisibility(View.VISIBLE);
 			}
 
-			contCntTextView.setText(contNCnt + "건");
+			contCntTextView.setText(contRCnt + "건");
 			contNCntTextView.setText(contNCnt + "건");
 			contRCntTextView.setText(contRCnt + "건");
 			contYCntTextView.setText(contYCnt + "건");
